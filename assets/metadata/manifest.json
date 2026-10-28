@@ -6,10 +6,23 @@
   "character_ids": [
     "CR001"
   ],
-  "assets": [],
+  "assets": [
+    {
+      "path": "assets/01_creatures/CR001_Lunaro/concept_forms/CR001_G1_concept_preview.png",
+      "type": "image/png",
+      "status": "concept_preview",
+      "notes": "Preview reduzido com paleta compactada; exige limpeza."
+    },
+    {
+      "path": "assets/01_creatures/CR001_Lunaro/animations/CR001_G1_idle_preview.gif",
+      "type": "image/gif",
+      "status": "animation_preview",
+      "notes": "Loop demonstrativo, não ciclo final de quadros."
+    }
+  ],
   "notes": [
-    "A biblioteca completa do kit anterior ainda não está importada.",
+    "Duas prévias selecionadas foram importadas; o kit conceitual completo permanece no ZIP do chat.",
     "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
-    "Status de produção deve ser revisto ao importar sprites/animações."
+    "Animações e sprites precisam de revisão antes de entrar no build."
   ]
 }
