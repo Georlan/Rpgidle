@@ -92,6 +92,12 @@
       "type": "image/png",
       "status": "animation_preview",
       "notes": "Original project-authored pixel art. 6 poses with RGBA transparency, common 64×48 cells, grounded baseline, Godot native frames. QA pending."
+    },
+    {
+      "path": "assets/01_creatures/evolution_concepts_preview.png",
+      "type": "image/png",
+      "status": "concept_preview",
+      "notes": "Four crops from ChatGPT-generated concept sheet of Brumelo G2/G3 and Ferru G2/G3 (28 Oct 2026). Low-resolution 4x48×40 indexed atlas, dark art background included, static non-gameplay portraits only. G4/alternate branches not drawn."
     }
   ],
   "notes": [

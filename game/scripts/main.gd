@@ -383,7 +383,7 @@ func _render_evolution_details() -> void:
         var atlas_texture: Texture2D = load(atlas_path)
         var portrait := AtlasTexture.new()
         portrait.atlas = atlas_texture
-        portrait.region = Rect2(slot * 80, 0, 80, 66)
+        portrait.region = Rect2(slot * 48, 0, 48, 40)
         picture.texture = portrait
     row.add_child(picture)
     var copy := VBoxContainer.new()

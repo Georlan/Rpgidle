@@ -24,5 +24,7 @@ jobs:
         run: python3 scripts/validate_bestiary.py
       - name: Validate non-linear evolution candidate graph
         run: python3 scripts/validate_evolution_preview.py
+      - name: Validate concept portraits PNG structure
+        run: python3 scripts/validate_evolution_art.py
       - name: Check JavaScript syntax
         run: node --check prototypes/visual-slice-v02/app.js

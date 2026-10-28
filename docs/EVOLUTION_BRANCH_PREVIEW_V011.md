@@ -16,3 +16,9 @@ Tela 3: alternar espécie, clicar/selecionar um nó G1–G4 e inspecionar a fich
 
 ## Futuro
 Estabelecer requisitos reais por jogo/feito, validação por indivíduo e save versionado só depois das decisões matemáticas. Evitar tratamento de formas do mesmo grau como equivalentes em combate por padrão.
+
+## Recortes de arte integrados nesta prévia
+
+`assets/01_creatures/evolution_concepts_preview.png` possui **192 × 40 px**, quatro quadros de **48 × 40 px**, extraídos da prancha gerada nesta conversa em 28/10/2026. Ordem: Brumelo G2, Brumelo G3, Ferru G2, Ferru G3.
+
+Não são sprites com transparência, não têm poses de movimento e não podem ser usados como forma jogável. O fundo escuro faz parte de cada retrato. A geração da arte inseriu textos/nomes provisórios; o jogo exibe rótulos em componentes reais para evitar fixar esses textos nos pixels. Outros caminhos G2–G4 usam o aviso de arte ausente. Os originais da conversa são mais detalhados que os recortes desta prévia.
