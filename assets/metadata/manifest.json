@@ -50,6 +50,12 @@
       "type": "image/png",
       "status": "animation_preview",
       "notes": "6 poses distintas, atlas horizontal 64×48 por célula, quantização 32 cores; estudo, não animação final. Baseline consistente; CR001 somente."
+    },
+    {
+      "path": "assets/03_world/dungeon/ruins_first_echo_backdrop.svg",
+      "type": "image/svg+xml",
+      "status": "in_review",
+      "notes": "Original indexed-style pixel art SVG authored for the project, 448×160, no third-party source. In-game visual QA pending."
     }
   ],
   "notes": [
