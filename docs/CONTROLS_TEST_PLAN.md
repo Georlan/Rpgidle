@@ -56,3 +56,11 @@ Fontes:
 - https://docs.godotengine.org/en/stable/tutorials/inputs/controllers_gamepads_joysticks.html
 - https://partner.steamgames.com/doc/features/steam_controller
 - https://partner.steamgames.com/doc/steamhardware/compat
+
+## Mouse e acessibilidade do modo compacto (v0.2)
+
+- [ ] `F1` deixa **três criaturas visíveis**, status mínimo e botão **Expandir** na janela compacta.
+- [ ] O botão **Expandir** funciona com mouse, teclado e gamepad.
+- [ ] A tela de criaturas permite pausar/reiniciar os testes de movimento da CR001.
+- [ ] Sprites das outras duas linhagens continuam estáticos até existirem frames reais.
+- [ ] Fazer alt-tab e confirmar que o modo compacto não sequestra clique e controle de outro aplicativo.

@@ -18,3 +18,11 @@ Um teste automatizado de importação + smoke test em runtime foi incluído para
 ## Próximo gate
 
 Separar o loop visual mínimo, revisão das animações CR001 e interação entre evolução/treinamento somente depois de aprovar os cálculos de combate e as regras de progressão. Não aumentar o escopo para Steamworks SDK antes de uma build jogável confiável.
+
+## Prévia do modo desktop e dos movimentos CR001
+
+No laboratório nativo, `F1` abre uma faixa compacta com os três pets ainda visíveis, status de andar e botão **Expandir**, sem precisar adivinhar atalhos para retornar. Esta faixa é **uma janela comum**: transparência, click-through e always-on-top ainda não foram homologados.
+
+Na tela **2 · Criaturas**, selecione a CR001 (Lunaro) e experimente os botões `Idle`, `Caminhar`, `Atacar`, `Dano`, `Habilidade` e `Pausar/retomar movimento`.
+
+**Estes são movimentos programáticos de uma imagem conceitual**, não ciclos de sprite sheets finais. O objetivo é validar ritmo, legibilidade e custo antes da curadoria artística final.
