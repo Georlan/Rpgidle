@@ -479,7 +479,7 @@ func _update_dungeon_hud() -> void:
         phase_label = "Movimento reduzido"
     _compact_status.text = "Andar %d   ·   %s\n%s" % [preview_floor, phase_label, "Teste pausado no compacto" if trial != null else "Prévia automática"]
     if current_screen == 0 and trial != null:
-        _page_body.text = "TESTE EXPERIMENTAL · ANDAR %d · EQUIPE %d/%d · ALVO %d/%d · %s\n%s" % [trial.floor_number, trial.team_hp, trial.MAX_TEAM_HP, trial.enemy_hp, trial.MAX_ENEMY_HP, "ENCERRADO" if trial.finished else phase_label, trial.last_event]
+        _page_body.text = "TESTE EXPERIMENTAL · ANDAR %d · EQUIPE %d/%d · ALVO %d/%d · %s\n%s" % [trial.floor_number, trial.team_hp, trial.MAX_TEAM_HP, trial.enemy_hp, trial.MAX_ENEMY_HP, "ENCERRADO" if trial.finished else phase_label, trial.last_event + "  ·  Lunaro %d  Brumelo %d  Ferru %d" % [trial.creature_hp["CR001"], trial.creature_hp["CR002"], trial.creature_hp["CR003"]]]
     elif current_screen == 0:
         _page_body.text = "RUÍNAS DO PRIMEIRO ECO  ·  ANDAR %d  ·  %s  ·  %dx  /  SIMULAÇÃO VISUAL" % [
             preview_floor, phase_label, int(_stage.preview_speed())
@@ -505,6 +505,7 @@ func _on_trial_round_requested() -> void:
         return
     var events: Array = trial.resolve_round()
     _stage.play_trial_events(events)
+    _stage.set_trial_health(trial.creature_hp)
     preview_floor = trial.floor_number
     _stage.set_floor_preview(preview_floor)
     if trial.finished:
@@ -531,6 +532,7 @@ func _start_trial() -> void:
     trial = DungeonTrial.new()
     preview_floor = trial.floor_number
     _stage.set_trial_visible(true)
+    _stage.set_trial_health(trial.creature_hp)
     _stage.set_paused(false)
     _stage.reset_preview_cycle()
     _render()
