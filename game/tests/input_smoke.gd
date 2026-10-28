@@ -19,6 +19,7 @@ func _run() -> void:
     _check(ui.preview_floor == 36, "starts at demonstration floor 36")
     _check(ui._stage.visible, "dungeon stage is visible at startup")
     _check(ui._stage.creature_count() == 3, "dungeon stage includes 3 creatures")
+    _check(ui._stage.backdrop_size() == Vector2i(448, 160), "professional pixel backdrop imported")
     _check(ui._stage.is_preview_running(), "dungeon scene starts in preview mode")
     _check(ui._stage.floor_preview() == 36, "dungeon floor preview stays synchronized")
     _check(ui._stage.phase_for_time(0.3) == "walk", "exploration phase")

@@ -2,6 +2,7 @@ extends Control
 ## Dungeon stage v0.6 — visual-only loop. No enemies, health, damage or rewards.
 ## Uses existing CreatureMotion previews; Godot 4.6.1 CanvasItem drawing.
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
+const BACKDROP: Texture2D = preload("res://assets/03_world/dungeon/ruins_first_echo_backdrop.png")
 const CREATURES = [
     {"id":"CR001","path":"res://assets/01_creatures/CR001_Lunaro/concept_forms/CR001_G1_concept_preview.png"},
     {"id":"CR002","path":"res://assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg"},
@@ -19,11 +20,12 @@ var _caption: Label
 
 func _ready() -> void:
     clip_contents = true
+    texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
     mouse_filter = Control.MOUSE_FILTER_IGNORE
     _caption = Label.new()
-    _caption.text = "RUÍNAS DO PRIMEIRO ECO  ·  PRÉVIA VISUAL"
-    _caption.position = Vector2(16, 11)
-    _caption.add_theme_font_size_override("font_size", 13)
+    _caption.text = "RUÍNAS DO PRIMEIRO ECO   ·   EXPLORAÇÃO"
+    _caption.position = Vector2(19, 13)
+    _caption.add_theme_font_size_override("font_size", 12)
     _caption.add_theme_color_override("font_color", Color("#c8d7cd"))
     _caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
     add_child(_caption)
@@ -126,7 +128,7 @@ func _position_actors() -> void:
     if _actors.is_empty() or size.x <= 0.0 or size.y <= 0.0:
         return
     var width: float = size.x
-    var baseline: float = size.y * 0.89
+    var baseline: float = size.y * 0.90
     var travel: float = 0.0
     if _playing:
         if _elapsed < 1.8:
@@ -139,42 +141,44 @@ func _position_actors() -> void:
         var actor = _actors[i]
         var x: float = width * 0.09 + float(i) * minf(width * 0.165, 118.0) + travel
         actor.position = Vector2(roundf(x), roundf(baseline - actor.size.y))
+    queue_redraw()
+
+
+func backdrop_size() -> Vector2i:
+    return Vector2i(BACKDROP.get_width(), BACKDROP.get_height())
 
 
 func _draw() -> void:
+    if size.x < 1.0 or size.y < 1.0:
+        return
+    # Original hand-authored indexed pixel art, not a screenshot of another game.
+    # Keep detail crisp even at non-integer desktop window sizes.
+    draw_texture_rect(BACKDROP, Rect2(Vector2.ZERO, size), false)
     var w: float = size.x
     var h: float = size.y
-    if w <= 0.0 or h <= 0.0:
-        return
-    # Painterly pixel-styled architecture built from reusable rectangles and lines.
-    draw_rect(Rect2(0, 0, w, h), Color("#172a34"))
-    draw_rect(Rect2(0, h * 0.19, w, h * 0.29), Color("#213744"))
-    draw_rect(Rect2(0, h * 0.48, w, h * 0.23), Color("#263a42"))
-    draw_circle(Vector2(w * 0.78, h * 0.40), h * 0.23, Color("#416b72", 0.20))
-    # Distance pillars and worn masonry.
-    for i in range(7):
-        var x: float = 34.0 + float(i) * w / 6.0
-        draw_rect(Rect2(x, h * 0.18, 24, h * 0.47), Color("#374b50", 0.62))
-        draw_rect(Rect2(x - 7, h * 0.20, 38, 9), Color("#50646a", 0.65))
-    # Gate: the focus of the exploration, not a real target or enemy.
-    var gate_x: float = w * 0.81
-    var gate_y: float = h * 0.49
-    draw_rect(Rect2(gate_x - 45, gate_y - 8, 90, h * 0.27), Color("#65746d"))
-    draw_rect(Rect2(gate_x - 35, gate_y, 70, h * 0.28), Color("#132731"))
-    draw_arc(Vector2(gate_x, gate_y), 37.0, PI, TAU, 25, Color("#83918a"), 8.0)
-    draw_circle(Vector2(gate_x, gate_y + h * 0.11), 24.0, Color("#6aae9f", 0.11))
-    # Ground and repeating pavers — very inexpensive draw calls.
-    var floor_y: float = h * 0.72
-    draw_rect(Rect2(0, floor_y, w, h - floor_y), Color("#344744"))
-    draw_rect(Rect2(0, floor_y, w, 5.0), Color("#8b9277"))
-    for i in range(int(ceil(w / 56.0)) + 1):
-        var x: float = float(i) * 56.0
-        draw_line(Vector2(x, floor_y + 17.0), Vector2(x + 37.0, floor_y + 17.0), Color("#597066", 0.6), 2.0)
-        draw_line(Vector2(x + 25.0, floor_y + 47.0), Vector2(x + 57.0, floor_y + 47.0), Color("#576b60", 0.65), 2.0)
-    draw_line(Vector2(0, h - 10), Vector2(w, h - 10), Color("#172b2d"), 7.0)
-    # Gold/teal impact FX: only a stage cue, no combat state.
+    # Very light ground contact gives each creature a place in the world.
+    # Drawn beneath the child sprites, no per-creature textures.
+    var travel: float = 0.0
+    if _playing:
+        if _elapsed < 1.8:
+            travel = _elapsed / 1.8 * 34.0
+        elif _elapsed < 2.95:
+            travel = 34.0
+        elif _elapsed < 4.45:
+            travel = 34.0 * (1.0 - (_elapsed - 2.95) / 1.5)
+    for i in range(_actors.size()):
+        var x: float = w * 0.09 + float(i) * minf(w * 0.165, 118.0) + travel + 46.0
+        draw_ellipse_shadow(Vector2(x, h * 0.91), 34.0 - float(i) * 3.0)
+    # One readable impact, deliberately short. No damage or ability logic.
     if preview_fx_visible():
-        var fx_t: float = (_elapsed - 2.45) / 0.50
-        var point := Vector2(w * 0.73, h * 0.55)
-        draw_arc(point, 16.0 + fx_t * 35.0, -0.9, 1.9, 22, Color("#c69d66", 1.0 - fx_t), 3.0)
-        draw_line(point + Vector2(-17, 16), point + Vector2(18, -20), Color("#e3c99b", 1.0 - fx_t), 3.0)
+        var t: float = clampf((_elapsed - 2.45) / 0.50, 0.0, 1.0)
+        var origin := Vector2(w * 0.75, h * 0.58)
+        draw_arc(origin, 14.0 + 30.0 * t, -0.85, 1.9, 18, Color(0.84, 0.75, 0.50, 1.0 - t), 2.0)
+        draw_line(origin + Vector2(-17, 14), origin + Vector2(18, -18), Color(0.92, 0.83, 0.63, 1.0 - t), 3.0)
+
+
+func draw_ellipse_shadow(center: Vector2, radius: float) -> void:
+    # Elliptic contact shadows without shaders; one primitive per creature.
+    draw_set_transform(center, 0.0, Vector2(1.0, 0.22))
+    draw_circle(Vector2.ZERO, radius, Color(0.03, 0.08, 0.10, 0.40))
+    draw_set_transform(Vector2.ZERO)

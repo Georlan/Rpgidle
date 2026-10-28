@@ -50,6 +50,12 @@
       "type": "image/png",
       "status": "animation_preview",
       "notes": "6 poses distintas, atlas horizontal 64×48 por célula, quantização 32 cores; estudo, não animação final. Baseline consistente; CR001 somente."
+    },
+    {
+      "path": "assets/03_world/dungeon/ruins_first_echo_backdrop.png",
+      "type": "image/png",
+      "status": "in_review",
+      "notes": "Original procedural-pixel illustrated hand-authored by project; 448x160 indexed 64 colors, authored with Pillow using deterministic script. No third-party artwork. Needs in-engine visual QA on Linux."
     }
   ],
   "notes": [
