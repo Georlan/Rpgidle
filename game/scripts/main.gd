@@ -42,6 +42,7 @@ var _page_body: Label
 var _action_bar: HFlowContainer
 var _auto_demo_button: Button
 var _pet_row: HBoxContainer
+var _detail_cards: VBoxContainer
 var _stage
 var _signature_preview: TextureRect
 var _hint: Label
@@ -56,7 +57,7 @@ var _compact_expand: Button
 func _ready() -> void:
     Bindings.install()
     theme = VisualTheme.make_theme()
-    get_window().title = "Rpgidle — Laboratório de Controles"
+    get_window().title = "Rpgidle — Prévia Visual"
     _build_interface()
     _render()
 
@@ -192,6 +193,10 @@ func _build_interface() -> void:
     _pet_row.add_theme_constant_override("separation", 12)
     _content.add_child(_pet_row)
 
+    _detail_cards = VBoxContainer.new()
+    _detail_cards.add_theme_constant_override("separation", 8)
+    _content.add_child(_detail_cards)
+
     _action_bar = HFlowContainer.new()
     _action_bar.add_theme_constant_override("h_separation", 9)
     _action_bar.add_theme_constant_override("v_separation", 7)
@@ -210,6 +215,9 @@ func _render() -> void:
         child.queue_free()
     for child in _action_bar.get_children():
         child.queue_free()
+    for child in _detail_cards.get_children():
+        child.queue_free()
+    _detail_cards.visible = current_screen == 1 or current_screen == 2
     for i in _tabs.size():
         VisualTheme.navigation(_tabs[i], i == current_screen)
 
@@ -218,7 +226,7 @@ func _render() -> void:
     _signature_preview.visible = current_screen == 4
     _stage.set_floor_preview(preview_floor)
     _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
-    _page_body.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if current_screen == 0 else Control.SIZE_EXPAND_FILL
+    _page_body.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
     _page_title.text = SCREENS[current_screen]
     match current_screen:
         0:
@@ -229,6 +237,7 @@ func _render() -> void:
             var pet: Dictionary = PETS[selected_creature]
             _page_body.text = "%s   •   %s        /        Força · Velocidade · Resistência · Inteligência\nTrês técnicas automáticas por criatura. Visual experimental, sem atributos calculados." % [pet["name"], pet["id"]]
             _render_pets()
+            _render_creature_details()
             _add_action("Próxima criatura (prévia)", _next_pet)
             if selected_creature == 0:
                 _add_action("Idle", _show_motion_state.bind("idle"))
@@ -241,6 +250,7 @@ func _render() -> void:
         2:
             _page_body.text = "CR001     •     GRAU %d / 4\nFormas intercambiáveis por indivíduo. Requisitos definitivos ainda em estudo." % preview_grade
             _render_pets()
+            _render_evolution_details()
             _add_action("Ver próximo grau", _next_grade)
         3:
             _page_body.text = "HABITAT   /   %s     •     Registro permanente de formas descobertas. Tema cosmético de prévia." % THEMES[preview_theme]
@@ -259,7 +269,7 @@ func _render() -> void:
 func _render_pets() -> void:
     for pet in PETS:
         var block := VBoxContainer.new()
-        block.custom_minimum_size = Vector2(130, 136)
+        block.custom_minimum_size = Vector2(125, 116)
         var picture := CreatureMotion.new()
         picture.custom_minimum_size = Vector2(110, 100)
         picture.configure(pet["id"], pet["path"], motion_enabled)
@@ -267,11 +277,61 @@ func _render_pets() -> void:
         var title := Label.new()
         title.text = pet["name"]
         title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        title.add_theme_color_override("font_color", VisualTheme.IVORY)
+        var is_selected: bool = current_screen == 1 and pet["id"] == PETS[selected_creature]["id"]
+        title.add_theme_color_override("font_color", VisualTheme.GOLD if is_selected else VisualTheme.IVORY)
         block.add_child(title)
         _pet_row.add_child(block)
         if pet["id"] == "CR001" and current_screen == 1 and selected_creature == 0 and auto_demo_enabled and motion_enabled and not compact:
             picture.start_demo()
+
+
+func _make_info_card(title_text: String, detail_text: String, selected: bool = false) -> PanelContainer:
+    var panel := PanelContainer.new()
+    panel.custom_minimum_size = Vector2(158, 60)
+    var content := VBoxContainer.new()
+    content.add_theme_constant_override("separation", 3)
+    panel.add_child(content)
+    var heading := Label.new()
+    heading.text = title_text
+    heading.add_theme_font_size_override("font_size", 12)
+    heading.add_theme_color_override("font_color", VisualTheme.GOLD if selected else VisualTheme.MUTED)
+    content.add_child(heading)
+    var detail := Label.new()
+    detail.text = detail_text
+    detail.add_theme_font_size_override("font_size", 13)
+    detail.add_theme_color_override("font_color", VisualTheme.IVORY)
+    content.add_child(detail)
+    return panel
+
+
+func _render_creature_details() -> void:
+    var stats := HFlowContainer.new()
+    stats.add_theme_constant_override("h_separation", 7)
+    stats.add_theme_constant_override("v_separation", 7)
+    for name in ["Força", "Velocidade", "Resistência", "Inteligência"]:
+        stats.add_child(_make_info_card(name, "A definir"))
+    _detail_cards.add_child(stats)
+    var title := Label.new()
+    title.text = "TÉCNICAS AUTOMÁTICAS   /   3 ESPAÇOS"
+    title.add_theme_font_size_override("font_size", 11)
+    title.add_theme_color_override("font_color", VisualTheme.JADE)
+    _detail_cards.add_child(title)
+    var cards := HFlowContainer.new()
+    cards.add_theme_constant_override("h_separation", 7)
+    for index in range(3):
+        cards.add_child(_make_info_card("CARTA %02d" % (index + 1), "Sem técnica"))
+    _detail_cards.add_child(cards)
+
+
+func _render_evolution_details() -> void:
+    var strip := HFlowContainer.new()
+    strip.add_theme_constant_override("h_separation", 8)
+    strip.add_theme_constant_override("v_separation", 8)
+    var headings := ["I  •  Inicial", "II  •  Ramificações", "III  •  Ramificações", "IV  •  Transcendência"]
+    for i in range(4):
+        var detail := "Prévia selecionada" if preview_grade == i + 1 else "Requisitos em estudo"
+        strip.add_child(_make_info_card(headings[i], detail, preview_grade == i + 1))
+    _detail_cards.add_child(strip)
 
 
 func _add_action(label: String, handler: Callable) -> Button:
