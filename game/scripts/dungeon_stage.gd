@@ -162,8 +162,9 @@ func _set_phase(next_phase: String, force: bool = false) -> void:
         var anim := "idle"
         if next_phase == "explore" or next_phase == "advance":
             anim = "walk"
-        elif next_phase == "engage" and actor.creature_id == "CR001":
-            anim = "attack"
+        elif next_phase == "engage":
+            # Presentation only: roles distinguish silhouettes; no damage or actual techniques.
+            anim = "skill" if actor.creature_id == "CR002" else "attack"
         actor.play_state(anim)
     visual_phase_changed.emit(_phase)
 

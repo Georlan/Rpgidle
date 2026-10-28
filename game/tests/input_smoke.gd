@@ -101,6 +101,18 @@ func _run() -> void:
     _check(first_picture.get("has_pose_atlas") == true, "atlas loaded from PNG")
     for name in ["idle", "walk", "attack", "hurt", "skill"]:
         _check(first_picture.sprite_frame_count(name) >= 3, "sprite state has real frames: " + name)
+    # Verify the two new individual atlases also load via SpriteFrames in the actual engine.
+    for idx in [1, 2]:
+        var creature_block: VBoxContainer = ui._pet_row.get_child(idx) as VBoxContainer
+        var creature_picture: TextureRect = creature_block.get_child(0) as TextureRect
+        _check(creature_picture.get("has_pose_atlas") == true, "new G1 atlas loaded for %s" % creature_picture.get("creature_id"))
+        for state in ["idle", "walk", "attack", "hurt", "skill"]:
+            _check(creature_picture.sprite_frame_count(state) >= 3, "new creature frames: " + state)
+        creature_picture.play_state("walk")
+        _check(creature_picture.sprite_animation_name() == "walk", "walk uses native frames")
+        creature_picture.set_motion_enabled(false)
+        _check(creature_picture.sprite_animation_name() == "idle", "motion off freezes at idle")
+        creature_picture.set_motion_enabled(true)
     _check(first_picture.sprite_animation_name() == "idle", "initial idle sprite animation")
     _check(ui.auto_demo_enabled, "autoplay enabled by default in CR001 preview")
     _check(first_picture.demo_is_running(), "CR001 autoplay running on creature screen")

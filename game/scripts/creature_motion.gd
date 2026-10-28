@@ -1,8 +1,12 @@
 extends TextureRect
 ## Animation laboratory for creature previews, not a finished combat or sprite animation.
-## CR001 has six distinct source poses driven by AnimatedSprite2D/SpriteFrames.
-## CR002/CR003 are static silhouettes with an optional soft breathing motion.
-const ATLAS_PATH := "res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png"
+## All three G1 preview creatures now have individual six-pose atlases.
+## This is animation art in review, not a released sprite standard.
+const ATLAS_PATHS := {
+    "CR001":"res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png",
+    "CR002":"res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_64x48.png",
+    "CR003":"res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_64x48.png"
+}
 const CELL := Vector2i(64, 48)
 const VALID_STATES := ["idle", "walk", "attack", "hurt", "skill"]
 # A demonstration timeline, not a combat AI or final animation timing.
@@ -28,8 +32,8 @@ func configure(id: String, resource_path: String, enabled: bool = true) -> void:
     motion_enabled = enabled
     texture = null
 
-    if creature_id == "CR001":
-        has_pose_atlas = _create_pose_sprite()
+    if ATLAS_PATHS.has(creature_id):
+        has_pose_atlas = _create_pose_sprite(String(ATLAS_PATHS[creature_id]))
     if not has_pose_atlas and ResourceLoader.exists(resource_path):
         texture = load(resource_path)
         expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -58,14 +62,14 @@ func _notification(what: int) -> void:
             play_state("idle")
 
 
-func _create_pose_sprite() -> bool:
-    if not ResourceLoader.exists(ATLAS_PATH):
-        push_warning("CR001 pose atlas missing; using static concept fallback")
+func _create_pose_sprite(path: String) -> bool:
+    if not ResourceLoader.exists(path):
+        push_warning("Pose atlas missing for %s; using concept fallback" % creature_id)
         return false
 
-    var atlas: Texture2D = load(ATLAS_PATH)
+    var atlas: Texture2D = load(path)
     if atlas == null or atlas.get_width() != CELL.x * 6 or atlas.get_height() != CELL.y:
-        push_warning("Invalid CR001 atlas dimensions; using static concept fallback")
+        push_warning("Invalid atlas dimensions for %s; using concept fallback" % creature_id)
         return false
 
     _frames = SpriteFrames.new()
@@ -140,7 +144,7 @@ func set_motion_enabled(enabled: bool) -> void:
 
 
 func start_demo() -> void:
-    if creature_id != "CR001" or not has_pose_atlas or not motion_enabled or not is_visible_in_tree():
+    if not has_pose_atlas or not motion_enabled or not is_visible_in_tree():
         return
     stop_demo()
     _demo_running = true
@@ -217,7 +221,7 @@ func play_state(requested: String) -> void:
         _motion.set_speed_scale(_playback_speed)
         return
 
-    # Temporary silhouettes: breathe gently but do not pretend to have sprite frames.
+    # Fallback for missing atlas: gentle breathing on original concept SVG.
     if not motion_enabled or not is_visible_in_tree():
         return
     _motion = create_tween().set_trans(Tween.TRANS_SINE)
