@@ -4,10 +4,11 @@ extends TextureRect
 ## This is animation art in review, not a released sprite standard.
 const ATLAS_PATHS := {
     "CR001":"res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png",
-    "CR002":"res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_64x48.png",
-    "CR003":"res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_64x48.png"
+    "CR002":"res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_96x80.png",
+    "CR003":"res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_96x80.png"
 }
 const CELL := Vector2i(64, 48)
+const PREMIUM_CELL := Vector2i(96, 80)
 const VALID_STATES := ["idle", "walk", "attack", "hurt", "skill"]
 # A demonstration timeline, not a combat AI or final animation timing.
 const DEMO_STATES := ["idle", "walk", "idle", "attack", "idle", "skill", "idle"]
@@ -24,11 +25,13 @@ var _demo_tween: Tween
 var _demo_running: bool = false
 var _demo_index: int = -1
 var _sprite_scale: float = 1.0
+var _cell: Vector2i = CELL
 var _playback_speed: float = 1.0
 
 
 func configure(id: String, resource_path: String, enabled: bool = true) -> void:
     creature_id = id
+    _cell = CELL if id == "CR001" else PREMIUM_CELL
     motion_enabled = enabled
     texture = null
 
@@ -68,18 +71,24 @@ func _create_pose_sprite(path: String) -> bool:
         return false
 
     var atlas: Texture2D = load(path)
-    if atlas == null or atlas.get_width() != CELL.x * 6 or atlas.get_height() != CELL.y:
+    if atlas == null or atlas.get_width() != _cell.x * 6 or atlas.get_height() != _cell.y:
         push_warning("Invalid atlas dimensions for %s; using concept fallback" % creature_id)
         return false
 
     _frames = SpriteFrames.new()
     _frames.clear_all()
     # Slower idle and more evenly paced alternating steps. No interpolated pixels.
-    _add_animation("idle", [0, 0, 0, 1, 0, 0], 5.0, true, atlas)
-    _add_animation("walk", [0, 1, 0, 1], 6.5, true, atlas)
-    _add_animation("attack", [0, 0, 2, 3, 0], 12.0, false, atlas)
-    _add_animation("hurt", [0, 4, 0], 8.0, false, atlas)
-    _add_animation("skill", [0, 5, 0], 7.0, false, atlas)
+    if creature_id == "CR001":
+        _add_animation("idle", [0, 0, 0, 1, 0, 0], 5.0, true, atlas)
+        _add_animation("walk", [0, 1, 0, 1], 6.5, true, atlas)
+        _add_animation("attack", [0, 0, 2, 3, 0], 12.0, false, atlas)
+    else:
+        # Six approved illustration poses: idle, walk, idle variant, attack, hurt, skill.
+        _add_animation("idle", [0, 0, 2, 0], 4.0, true, atlas)
+        _add_animation("walk", [0, 1, 2, 1], 6.0, true, atlas)
+        _add_animation("attack", [0, 3, 0], 7.0, false, atlas)
+    _add_animation("hurt", [0, 4, 0], 7.0, false, atlas)
+    _add_animation("skill", [0, 5, 0], 6.0, false, atlas)
 
     _sprite = AnimatedSprite2D.new()
     _sprite.centered = true
@@ -98,7 +107,7 @@ func _add_animation(name: StringName, indexes: Array, fps: float, looping: bool,
     for index in indexes:
         var region := AtlasTexture.new()
         region.atlas = atlas
-        region.region = Rect2(int(index) * CELL.x, 0, CELL.x, CELL.y)
+        region.region = Rect2(int(index) * _cell.x, 0, _cell.x, _cell.y)
         region.filter_clip = true
         _frames.add_frame(name, region)
 
@@ -108,9 +117,13 @@ func _layout_sprite() -> void:
         return
     # Source poses share a baseline: all opaque pixels end at Y≈45.
     # Keep feet planted when changing animation frames and control dimensions.
-    _sprite_scale = minf(size.x / 54.0, size.y / 45.0)
+    if creature_id == "CR001":
+        _sprite_scale = minf(size.x / 54.0, size.y / 45.0)
+        _sprite.position = Vector2(size.x * 0.5, size.y - 5.0 - 21.0 * _sprite_scale)
+    else:
+        _sprite_scale = minf(size.x / 90.0, size.y / 77.0)
+        _sprite.position = Vector2(size.x * 0.5, size.y - 3.0 - 37.0 * _sprite_scale)
     _sprite.scale = Vector2.ONE * _sprite_scale
-    _sprite.position = Vector2(size.x * 0.5, size.y - 5.0 - 21.0 * _sprite_scale)
 
 
 func _stop_motion() -> void:
@@ -253,3 +266,7 @@ func sprite_frame_count(state: String) -> int:
 
 func sprite_animation_name() -> String:
     return String(_sprite.animation) if _sprite != null else ""
+
+
+func sprite_cell_size() -> Vector2i:
+    return _cell
