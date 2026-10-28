@@ -24,6 +24,7 @@ const FORMATION_X := [0.375, 0.255, 0.145]
 const FOOT_OFFSETS := [-1.0, 1.0, 2.0]
 
 var _trial_visible := false
+var _trial_health: Dictionary = {}
 var _actors: Array = []
 var _playing: bool = false
 var _paused: bool = false
@@ -54,7 +55,18 @@ func _ready() -> void:
 
 func set_trial_visible(value: bool) -> void:
     _trial_visible = value
+    if not value:
+        _trial_health = {}
+    _set_phase(_phase, true)
     queue_redraw()
+
+
+func set_trial_health(health: Dictionary) -> void:
+    _trial_health = health.duplicate()
+    for actor in _actors:
+        if _trial_visible and int(_trial_health.get(actor.creature_id, 1)) <= 0:
+            actor.set_motion_enabled(false)
+            actor.modulate = Color(0.55, 0.55, 0.55, 0.55)
 
 
 func set_floor_preview(value: int) -> void:
@@ -169,11 +181,13 @@ func _process(delta: float) -> void:
 
 func play_trial_events(events: Array) -> void:
     for event in events:
-        if event.get("type", "") != "team_attack":
+        var event_type: String = event.get("type", "")
+        var target_id: String = event.get("actor", "") if event_type == "team_attack" else event.get("target", "")
+        if event_type != "team_attack" and event_type != "enemy_attack":
             continue
         for actor in _actors:
-            if actor.creature_id == event.get("actor", ""):
-                actor.play_state("attack")
+            if actor.creature_id == target_id:
+                actor.play_state("attack" if event_type == "team_attack" else "hurt")
 
 
 func _set_phase(next_phase: String, force: bool = false) -> void:
@@ -183,6 +197,10 @@ func _set_phase(next_phase: String, force: bool = false) -> void:
         return
     _phase = next_phase
     for actor in _actors:
+        if _trial_visible and int(_trial_health.get(actor.creature_id, 1)) <= 0:
+            actor.set_motion_enabled(false)
+            actor.modulate = Color(0.55, 0.55, 0.55, 0.55)
+            continue
         var should_animate: bool = _playing and not _paused
         actor.set_motion_enabled(should_animate)
         var anim := "idle"

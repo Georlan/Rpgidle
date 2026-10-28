@@ -49,7 +49,7 @@ Ver [contrato do ciclo](../docs/IDLE_PREVIEW_V09.md) para estados e testes.
 
 ## Teste jogável de dungeon (experimental)
 
-Na aba **Dungeon**, clique em **Iniciar teste jogável**. A equipe enfrenta um alvo abstrato: ao chegar ao encontro ocorre uma rodada. As ações de cada criatura são calculadas no núcleo experimental e acionam suas animações. **Postura: Pressão/Proteção** alterna o compromisso entre dano causado e recebido; **P** pausa, **V** alterna 1×/2× e **R** reinicia. Ao vencer, o andar avança; ao esgotar a vida da equipe, o teste para. **Sair do teste** retorna à prévia visual. O teste fica pausado ao trocar de tela ou compactar a janela.
+Na aba **Dungeon**, clique em **Iniciar teste jogável**. A equipe enfrenta um alvo abstrato: ao chegar ao encontro ocorre uma rodada. As ações de cada criatura são calculadas no núcleo experimental e acionam suas animações. **Postura: Pressão/Proteção** alterna o compromisso entre dano causado e recebido; **P** pausa, **V** alterna 1×/2× e **R** reinicia. Ao vencer, o andar avança; criaturas sem vida deixam de agir; quando toda a equipe perde a vida, o teste para. **Sair do teste** retorna à prévia visual. O teste fica pausado ao trocar de tela ou compactar a janela.
 
 Valores e regra de alvo são simulação descartável, não balanceamento, inimigo de bestiário ou decisão final. Não há salvamento, evolução, recompensa, treino, técnicas ou assinatura funcional. Reiniciar o teste não altera criaturas ou formas.
 

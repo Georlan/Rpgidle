@@ -226,9 +226,23 @@ func _run() -> void:
             right.set_stance(choice)
             _check(left.resolve_round() == right.resolve_round(), "repeatable combat events")
             _check(left.enemy_hp >= 0 and left.team_hp >= 0, "health never negative")
+            _check(left.team_hp == left.creature_hp.CR001 + left.creature_hp.CR002 + left.creature_hp.CR003, "team health equals individuals")
             if left.finished:
                 _check(left.resolve_round().is_empty(), "finished encounter cannot award again")
                 break
+    var rotation = DungeonTrial.new()
+    rotation.enemy_hp = 100 # Keep the same test encounter alive for target rotation.
+    for expected in ["CR001", "CR002", "CR003"]:
+        var rotation_events: Array = rotation.resolve_round()
+        var response: Dictionary = rotation_events.back()
+        _check(response.get("target", "") == expected, "enemy chooses living creatures in order")
+    var injured = DungeonTrial.new()
+    injured.creature_hp.CR001 = 0
+    injured.team_hp = 20
+    var injured_events: Array = injured.resolve_round()
+    _check(injured_events[0].actor == "CR002", "defeated creature does not attack")
+    _check(injured_events.back().target == "CR002", "enemy skips defeated target")
+    _check(injured.team_hp == 16 and injured.creature_hp.CR002 == 6, "damage applies only to targeted individual")
     var winner = DungeonTrial.new()
     winner.enemy_hp = 1
     var victory_events: Array = winner.resolve_round()
@@ -261,8 +275,12 @@ func _run() -> void:
         ui._on_trial_round_requested()
         guard += 1
     _check(ui.trial.finished and ui.trial.team_hp == 0 and ui._stage.is_paused(), "defeat ends and pauses trial")
+    for actor in ui._stage._actors:
+        _check(not actor.motion_enabled and actor.modulate.a < 1.0, "defeated creature is visually inactive")
     ui._reset_preview()
     _check(not ui.trial.finished and ui.trial.team_hp == 30 and ui.preview_floor == 1, "reset starts a fresh trial")
+    for actor in ui._stage._actors:
+        _check(actor.motion_enabled and is_equal_approx(actor.modulate.a, 1.0), "reset restores presentation of all creatures")
     ui._exit_trial()
     _check(ui.trial == null and not ui._stage._trial_visible, "exit returns to visual preview")
 
