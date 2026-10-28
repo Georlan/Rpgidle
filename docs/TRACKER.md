@@ -16,7 +16,8 @@
 - [x] Faixa compacta mostra os três pets com botão para expandir no mouse.
 - [x] Laboratório nativo de movimento CR001: idle, caminhada, ataque, dano e habilidade (proxies, não sprites finais).
 - [ ] Homologar visualmente o dock e a opção de movimento reduzido na Godot local.
-- [ ] Converter poses extraídas da CR001 em sprites consistentes frame a frame.
+- [x] Integrar atlas de seis poses da CR001 com SpriteFrames e animações nativas de preview.
+- [ ] Desenhar inbetweens manuais e revisar o aspecto visual/ritmo de cada ciclo na Godot do usuário.
 
 - [x] Projeto Godot importável com laboratório de seis telas e atalhos básicos de teclado/gamepad.
 - [x] Teste headless de navegação e estados demonstrativos preparado no CI.

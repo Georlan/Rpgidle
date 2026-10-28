@@ -49,10 +49,18 @@ func _run() -> void:
     var first_block: VBoxContainer = ui._pet_row.get_child(ui._pet_row.get_child_count() - 3) as VBoxContainer
     var first_picture: TextureRect = first_block.get_child(0) as TextureRect
     _check(first_picture.get("creature_id") == "CR001", "first sprite is CR001")
+    _check(first_picture.get("has_pose_atlas") == true, "atlas loaded from PNG")
+    for name in ["idle", "walk", "attack", "hurt", "skill"]:
+        _check(first_picture.sprite_frame_count(name) >= 3, "sprite state has real frames: " + name)
+    _check(first_picture.sprite_animation_name() == "idle", "initial idle sprite animation")
+    ui._show_motion_state("attack")
+    _check(first_picture.sprite_animation_name() == "attack", "attack uses pose frames")
     ui._show_motion_state("walk")
     _check(first_picture.get("motion_state") == "walk", "walk preview state started")
+    _check(first_picture.sprite_animation_name() == "walk", "walk uses pose frames")
     ui._toggle_motion_enabled()
     _check(not ui.motion_enabled, "motion can be disabled")
+    _check(first_picture.sprite_animation_name() == "idle", "motion off returns to idle pose")
     _check(first_picture.scale == Vector2.ONE, "disabled motion restores original scale")
     ui._toggle_motion_enabled()
     _check(ui.motion_enabled, "motion can be reenabled")

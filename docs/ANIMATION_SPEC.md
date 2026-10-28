@@ -22,3 +22,19 @@ Estados pretendidos: `idle`, `walk`, `attack`, `hurt`, `skill`. O primeiro lote 
 - A opção de reduzir movimento pausa os proxies; os efeitos não correspondem a dano, combate ou ganho real.
 - Fonte da API de Tween: https://docs.godotengine.org/en/4.6/classes/class_tween.html
 - Próximo gate: substituir os proxies por sprites com quadros desenhados consistentes e validar pivô/atlas na Godot 4.6.1.
+
+## Atlas de poses integrado no Godot — v0.3
+
+Arquivo: `assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png`. Dimensões totais **384 × 48 px**; **seis células de 64 × 48 px**; 32 cores indexadas com transparência. Ordem: idle, walk, attack_01, attack_02, hurt, skill. Extraído do kit piloto da própria conversa e reduzido por nearest-neighbor. Não é uma animação profissional quadro a quadro nem o atlas master de produção.
+
+Na `game/scripts/creature_motion.gd`, `AnimatedSprite2D` + `SpriteFrames` criam cinco animações a partir dessas poses, com tempos curtos e pequenos Tweens nativos para amenizar a transição. Todas as poses compartilham uma linha de chão no atlas. A paleta e a escala ainda exigem aprovação em monitor.
+
+- `idle`: pose inicial + variação de passada; não simula movimento anatômico completo.
+- `walk`: alterna duas poses; ainda precisa de quadros intermediários próprios.
+- `attack`: pose inicial → golpe → recuperação → inicial.
+- `hurt`: reação → restauração.
+- `skill`: pose de habilidade → restauração.
+
+No modo compacto o atlas também é utilizado, sem executar lógicas de combate. **Animar mais quadros não significa automaticamente animação mais suave:** não interpolar sprites pixelados arbitrariamente, pois isso cria borrões e artefatos.
+
+Testes: `python3 scripts/validate_pose_atlas.py` confere integridade PNG/dimensões e o smoke test Godot verifica cada estado de SpriteFrames, desligamento de movimento e retorno à UI.
