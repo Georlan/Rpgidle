@@ -1,0 +1,31 @@
+# Godot 4
+.godot/
+.import/
+.export/
+export.cfg
+export_presets.cfg
+*.translation
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.aseprite~
+*.psd~
+*~
+*.tmp
+__pycache__/
+*.pyc
+*.log
+
+# Binários exportados e builds
+build/
+dist/
+exports/
+*.exe
+*.app
+*.pck
+
+# Segredos locais
+.env
+.env.*
+!.env.example

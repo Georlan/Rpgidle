@@ -1,0 +1,10 @@
+{
+  "status": "exploratory",
+  "colors": {
+    "background": "#202A34",
+    "text": "#ECE3D2",
+    "system": "#6AAE9F",
+    "awakening": "#C69D66",
+    "accent": "#B96E70"
+  }
+}

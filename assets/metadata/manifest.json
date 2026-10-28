@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "pack_version": "0.1-github-seed",
+  "name_status": "provisional",
+  "current_asset_state": "concept_only",
+  "character_ids": [
+    "CR001"
+  ],
+  "assets": [],
+  "notes": [
+    "A biblioteca completa do kit anterior ainda não está importada.",
+    "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
+    "Status de produção deve ser revisto ao importar sprites/animações."
+  ]
+}
