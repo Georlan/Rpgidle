@@ -211,11 +211,15 @@ func _build_interface() -> void:
 
 
 func _render() -> void:
+    # Detach immediately; queue_free alone leaves stale UI nodes until next frame.
     for child in _pet_row.get_children():
+        _pet_row.remove_child(child)
         child.queue_free()
     for child in _action_bar.get_children():
+        _action_bar.remove_child(child)
         child.queue_free()
     for child in _detail_cards.get_children():
+        _detail_cards.remove_child(child)
         child.queue_free()
     _detail_cards.visible = current_screen == 1 or current_screen == 2
     for i in _tabs.size():
