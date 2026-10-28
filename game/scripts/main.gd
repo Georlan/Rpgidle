@@ -1,6 +1,7 @@
 extends Control
 ## Vertical slice de INTERFACE: nenhuma decisão aqui calcula dano, loot ou progresso.
 const Bindings = preload("res://game/scripts/input_bindings.gd")
+const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
 
 const SCREENS := ["Dungeon", "Criaturas", "Evoluções", "Rancho", "Sistema", "Arena"]
 const PETS := [
@@ -30,6 +31,7 @@ var preview_grade: int = 1
 var preview_signature: int = 0
 var preview_theme: int = 0
 var compact: bool = false
+var motion_enabled: bool = true
 
 var _tabs: Array[Button] = []
 var _page_title: Label
@@ -39,6 +41,10 @@ var _pet_row: HBoxContainer
 var _hint: Label
 var _content: VBoxContainer
 var _navigation: HBoxContainer
+var _compact_dock: HBoxContainer
+var _compact_creatures: HBoxContainer
+var _compact_status: Label
+var _compact_expand: Button
 
 
 func _ready() -> void:
@@ -113,6 +119,34 @@ func _build_interface() -> void:
         _navigation.add_child(tab)
         _tabs.append(tab)
 
+    # Compact desktop view: keep the creatures visible and restore via mouse.
+    _compact_dock = HBoxContainer.new()
+    _compact_dock.visible = false
+    _compact_dock.add_theme_constant_override("separation", 18)
+    layout.add_child(_compact_dock)
+
+    _compact_creatures = HBoxContainer.new()
+    _compact_creatures.add_theme_constant_override("separation", 4)
+    _compact_dock.add_child(_compact_creatures)
+    for pet in PETS:
+        var compact_picture := CreatureMotion.new()
+        compact_picture.custom_minimum_size = Vector2(82, 68)
+        compact_picture.configure(pet["id"], pet["path"], motion_enabled)
+        _compact_creatures.add_child(compact_picture)
+
+    _compact_status = Label.new()
+    _compact_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _compact_status.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    _compact_status.add_theme_color_override("font_color", Color("#ece3d2"))
+    _compact_dock.add_child(_compact_status)
+
+    _compact_expand = Button.new()
+    _compact_expand.text = "Expandir"
+    _compact_expand.focus_mode = Control.FOCUS_ALL
+    _compact_expand.pressed.connect(_toggle_compact)
+    _compact_dock.add_child(_compact_expand)
+    _compact_dock.process_mode = Node.PROCESS_MODE_DISABLED
+
     var panel := PanelContainer.new()
     panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
     layout.add_child(panel)
@@ -157,6 +191,7 @@ func _render() -> void:
     for i in _tabs.size():
         _tabs[i].modulate = Color("#c69d66") if i == current_screen else Color.WHITE
 
+    _compact_status.text = "Andar %d  ·  3 criaturas\nModo compacto — apenas visual" % preview_floor
     _page_title.text = SCREENS[current_screen] + "  /  DEMONSTRAÇÃO"
     match current_screen:
         0:
@@ -169,6 +204,13 @@ func _render() -> void:
             _page_body.text = "%s  •  %s\n\nForça | Velocidade | Resistência | Inteligência\n\nTrês cartas de técnicas automáticas por criatura. Valores, atributos efetivos e requisitos não estão definidos.\n\n%s" % [pet["name"], pet["id"], pet["note"]]
             _render_pets()
             _add_action("Próxima criatura (prévia)", _next_pet)
+            if selected_creature == 0:
+                _add_action("Idle", _show_motion_state.bind("idle"))
+                _add_action("Caminhar", _show_motion_state.bind("walk"))
+                _add_action("Atacar", _show_motion_state.bind("attack"))
+                _add_action("Dano", _show_motion_state.bind("hurt"))
+                _add_action("Habilidade", _show_motion_state.bind("skill"))
+                _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
         2:
             _page_body.text = "CR001 — Grau %d / 4\n\nFormas intercambiáveis são liberadas individualmente pela criatura. O registro do rancho conta formas distintas. Ainda não há requisitos matemáticos aprovados." % preview_grade
             _render_pets()
@@ -191,14 +233,9 @@ func _render_pets() -> void:
     for pet in PETS:
         var block := VBoxContainer.new()
         block.custom_minimum_size = Vector2(130, 136)
-        var picture := TextureRect.new()
+        var picture := CreatureMotion.new()
         picture.custom_minimum_size = Vector2(110, 100)
-        picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-        picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-        picture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-        var path: String = pet["path"]
-        if ResourceLoader.exists(path):
-            picture.texture = load(path)
+        picture.configure(pet["id"], pet["path"], motion_enabled)
         block.add_child(picture)
         var title := Label.new()
         title.text = pet["name"]
@@ -229,11 +266,33 @@ func _switch_screen(delta: int) -> void:
 func _advance_preview() -> void:
     preview_floor += 1
     _render()
+    _show_motion_state("attack")
 
 
 func _reset_preview() -> void:
     preview_floor = 1
     _render()
+
+
+func _show_motion_state(state: String) -> void:
+    # A motion preview, not gameplay damage or a completed sprite animation.
+    for block in _pet_row.get_children():
+        if block.get_child_count() > 0:
+            var picture := block.get_child(0)
+            if picture is CreatureMotion and picture.creature_id == "CR001":
+                picture.play_state(state)
+
+
+func _toggle_motion_enabled() -> void:
+    motion_enabled = not motion_enabled
+    for block in _pet_row.get_children():
+        if block.get_child_count() > 0:
+            var picture := block.get_child(0)
+            if picture is CreatureMotion:
+                picture.set_motion_enabled(motion_enabled)
+    for picture in _compact_creatures.get_children():
+        if picture is CreatureMotion:
+            picture.set_motion_enabled(motion_enabled)
 
 
 func _next_pet() -> void:
@@ -262,4 +321,10 @@ func _toggle_compact() -> void:
     _navigation.visible = not compact
     _content.visible = not compact
     _hint.visible = not compact
+    _compact_dock.visible = compact
+    _compact_dock.process_mode = Node.PROCESS_MODE_INHERIT if compact else Node.PROCESS_MODE_DISABLED
     get_window().size = Vector2i(820, 160) if compact else Vector2i(1100, 660)
+    if compact:
+        _compact_expand.grab_focus()
+    else:
+        _tabs[current_screen].grab_focus()
