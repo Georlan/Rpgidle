@@ -13,6 +13,10 @@
 
 ## Em andamento
 
+- [x] Ficha visual de criatura com 4 atributos e 3 slots de técnicas (sem valores inventados).
+- [x] Faixa dos 4 graus evolutivos com seleção contextual, respeitando requisitos pendentes.
+- [ ] Aprovar hierarquia e clipping na Godot Linux em resoluções menores.
+
 - [x] Design system Códice: paleta, painéis, botões, foco, abas e hierarquia das seis telas.
 - [x] Carta de Assinatura integrada como prévia gráfica real na tela do Sistema.
 - [ ] Avaliar interface em Godot Linux com screenshot real e controle físico.
