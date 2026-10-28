@@ -141,7 +141,6 @@ func _position_actors() -> void:
         var actor = _actors[i]
         var x: float = width * 0.09 + float(i) * minf(width * 0.165, 118.0) + travel
         actor.position = Vector2(roundf(x), roundf(baseline - actor.size.y))
-    queue_redraw()
 
 
 func backdrop_size() -> Vector2i:
@@ -168,7 +167,7 @@ func _draw() -> void:
             travel = 34.0 * (1.0 - (_elapsed - 2.95) / 1.5)
     for i in range(_actors.size()):
         var x: float = w * 0.09 + float(i) * minf(w * 0.165, 118.0) + travel + 46.0
-        draw_ellipse_shadow(Vector2(x, h * 0.91), 34.0 - float(i) * 3.0)
+        draw_circle(Vector2(x, h * 0.91), 11.0 - float(i), Color(0.03, 0.08, 0.10, 0.35))
     # One readable impact, deliberately short. No damage or ability logic.
     if preview_fx_visible():
         var t: float = clampf((_elapsed - 2.45) / 0.50, 0.0, 1.0)
@@ -176,9 +175,3 @@ func _draw() -> void:
         draw_arc(origin, 14.0 + 30.0 * t, -0.85, 1.9, 18, Color(0.84, 0.75, 0.50, 1.0 - t), 2.0)
         draw_line(origin + Vector2(-17, 14), origin + Vector2(18, -18), Color(0.92, 0.83, 0.63, 1.0 - t), 3.0)
 
-
-func draw_ellipse_shadow(center: Vector2, radius: float) -> void:
-    # Elliptic contact shadows without shaders; one primitive per creature.
-    draw_set_transform(center, 0.0, Vector2(1.0, 0.22))
-    draw_circle(Vector2.ZERO, radius, Color(0.03, 0.08, 0.10, 0.40))
-    draw_set_transform(Vector2.ZERO)
