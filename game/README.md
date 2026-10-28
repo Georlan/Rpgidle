@@ -40,3 +40,9 @@ O modo compacto mantém os três pets em idle e só executa a demonstração com
 Na tela **1 · Dungeon**, observe três criaturas atravessando uma faixa de ruínas com portal, piso e um pequeno efeito de ataque ilustrativo. Use **Próximo andar (simulação)** para disparar a reação; **Reiniciar andar** altera apenas o número de preview.
 
 A cena para ao mudar de tela, ao usar F1 no compacto ou ao reduzir movimento. Isso **não é combate jogável**, apenas composição visual/ritmo.
+
+## Dungeon idle-first — v0.9
+
+A Dungeon agora apresenta uma **simulação visual automática** (exploração → ação → conclusão → avanço) e atualização do andar ilustrativo a cada ciclo. **P** ou o botão principal pausam/retomam; **V** alterna 1x e 2x; **R** reinicia somente a prévia. A equipe e as formas não são reiniciadas. Não há combate real, drops ou treinamento.
+
+Ver [contrato do ciclo](../docs/IDLE_PREVIEW_V09.md) para estados e testes.
