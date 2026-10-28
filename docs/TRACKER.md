@@ -13,6 +13,11 @@
 
 ## Em andamento
 
+- [x] Autoplay demonstrativo CR001 com sequência de idle, caminhada, ataque e habilidade.
+- [x] Comandos manuais suspendem o autoplay; compacto e movimento reduzido pausam a sequência.
+- [x] CR002 e CR003 possuem respiração sutil em ritmos diferentes.
+- [ ] Inspecionar fluidez e consumo de recursos das três criaturas na Godot Linux do usuário.
+
 - [x] Faixa compacta mostra os três pets com botão para expandir no mouse.
 - [x] Laboratório nativo de movimento CR001: idle, caminhada, ataque, dano e habilidade (proxies, não sprites finais).
 - [ ] Homologar visualmente o dock e a opção de movimento reduzido na Godot local.

@@ -5,6 +5,9 @@ extends TextureRect
 const ATLAS_PATH := "res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png"
 const CELL := Vector2i(64, 48)
 const VALID_STATES := ["idle", "walk", "attack", "hurt", "skill"]
+# A demonstration timeline, not a combat AI or final animation timing.
+const DEMO_STATES := ["idle", "walk", "idle", "attack", "idle", "skill", "idle"]
+const DEMO_SECONDS := [1.6, 1.2, 0.65, 0.48, 0.8, 0.7, 1.15]
 
 var creature_id: String = ""
 var motion_enabled: bool = true
@@ -13,6 +16,9 @@ var has_pose_atlas: bool = false
 var _sprite: AnimatedSprite2D
 var _frames: SpriteFrames
 var _motion: Tween
+var _demo_tween: Tween
+var _demo_running: bool = false
+var _demo_index: int = -1
 var _sprite_scale: float = 1.0
 
 
@@ -41,10 +47,12 @@ func _ready() -> void:
 func _notification(what: int) -> void:
     if what == NOTIFICATION_RESIZED:
         _layout_sprite()
-    elif what == NOTIFICATION_VISIBILITY_CHANGED and _sprite != null:
+    elif what == NOTIFICATION_VISIBILITY_CHANGED:
         if not is_visible_in_tree():
+            stop_demo()
             _stop_motion()
-            _sprite.pause()
+            if _sprite != null:
+                _sprite.pause()
         elif motion_enabled:
             play_state("idle")
 
@@ -61,9 +69,10 @@ func _create_pose_sprite() -> bool:
 
     _frames = SpriteFrames.new()
     _frames.clear_all()
-    _add_animation("idle", [0, 0, 1, 0, 0], 5.0, true, atlas)
-    _add_animation("walk", [0, 1, 0, 1], 8.0, true, atlas)
-    _add_animation("attack", [0, 2, 3, 0], 11.0, false, atlas)
+    # Slower idle and more evenly paced alternating steps. No interpolated pixels.
+    _add_animation("idle", [0, 0, 0, 1, 0, 0], 5.0, true, atlas)
+    _add_animation("walk", [0, 1, 0, 1], 6.5, true, atlas)
+    _add_animation("attack", [0, 0, 2, 3, 0], 12.0, false, atlas)
     _add_animation("hurt", [0, 4, 0], 8.0, false, atlas)
     _add_animation("skill", [0, 5, 0], 7.0, false, atlas)
 
@@ -114,7 +123,49 @@ func _stop_motion() -> void:
 
 func set_motion_enabled(enabled: bool) -> void:
     motion_enabled = enabled
+    if not enabled:
+        stop_demo()
     play_state("idle")
+
+
+func start_demo() -> void:
+    if creature_id != "CR001" or not has_pose_atlas or not motion_enabled or not is_visible_in_tree():
+        return
+    stop_demo()
+    _demo_running = true
+    _demo_index = -1
+    _advance_demo()
+
+
+func stop_demo() -> void:
+    _demo_running = false
+    if _demo_tween != null and _demo_tween.is_valid():
+        _demo_tween.kill()
+    _demo_tween = null
+
+
+func demo_is_running() -> bool:
+    return _demo_running
+
+
+func demo_current_step() -> int:
+    return _demo_index
+
+
+func _advance_demo() -> void:
+    if not _demo_running or not motion_enabled or not is_visible_in_tree():
+        stop_demo()
+        return
+    _demo_index = wrapi(_demo_index + 1, 0, DEMO_STATES.size())
+    play_state(DEMO_STATES[_demo_index])
+    _demo_tween = create_tween()
+    _demo_tween.tween_interval(DEMO_SECONDS[_demo_index])
+    _demo_tween.tween_callback(_advance_demo)
+
+
+func _exit_tree() -> void:
+    stop_demo()
+    _stop_motion()
 
 
 func play_state(requested: String) -> void:
@@ -159,9 +210,13 @@ func play_state(requested: String) -> void:
     _motion = create_tween().set_trans(Tween.TRANS_SINE)
     match requested:
         "idle", "walk":
+            # Species have different breathing cadence and amplitudes.
+            # No additional atlas or animation frames are claimed for these silhouettes.
+            var stretch := Vector2(1.025, 0.980) if creature_id == "CR002" else Vector2(1.012, 0.990)
+            var duration := 1.05 if creature_id == "CR002" else 0.77
             _motion.set_loops()
-            _motion.tween_property(self, "scale", Vector2(1.015, 0.985), 0.85)
-            _motion.tween_property(self, "scale", Vector2.ONE, 0.85)
+            _motion.tween_property(self, "scale", stretch, duration)
+            _motion.tween_property(self, "scale", Vector2.ONE, duration)
         "hurt":
             _motion.tween_property(self, "modulate", Color("#f3b1a8"), 0.14)
             _motion.tween_property(self, "modulate", Color.WHITE, 0.20)
