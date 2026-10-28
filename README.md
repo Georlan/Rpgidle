@@ -21,6 +21,16 @@ Jogo independente em pré-produção para **Steam (PC)**, com foco em dungeon in
 
 A direção artística é **pixel art 2D de fantasia arcana**. Não confundir imagens conceituais, extrações e GIFs de teste com assets finais prontos para o jogo.
 
+## Protótipo visual navegável (v0.2)
+
+Há um [protótipo de seis telas](prototypes/visual-slice-v02/README.md) para comparar dungeon, criaturas, evoluções, rancho, Sistema e arena antes de iniciar o projeto Godot. Rodar na raiz:
+
+```bash
+python3 -m http.server 8000
+```
+
+Depois abrir `http://localhost:8000/prototypes/visual-slice-v02/`. Os dados de batalha e status são **demonstrativos**.
+
 ## Próxima etapa
 
 Fechar especificação de produção, organizar os primeiros assets do piloto **CR001** e validar uma animação consistente antes de expandir o bestiário. Não criar sistemas adicionais até a matemática de treinamento, evolução, dungeon e PvP estar definida.

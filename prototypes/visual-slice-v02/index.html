@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Protótipo navegável local das telas de um RPG idle de criaturas.">
+  <title>RPG Idle — Laboratório visual v0.2</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="shell" id="shell">
+    <header class="header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span><strong>RPG IDLE</strong><small>LABORATÓRIO VISUAL · V0.2</small></span>
+      </div>
+      <div class="header-actions">
+        <span class="prototype-tag">PRÉVIA INTERATIVA · SEM GAMEPLAY</span>
+        <button type="button" class="quiet-button" data-action="compact" aria-label="Alternar modo compacto">Modo desktop</button>
+      </div>
+    </header>
+    <div class="workspace">
+      <nav class="nav" aria-label="Telas do protótipo">
+        <p class="nav-label">SISTEMA</p>
+        <button class="nav-item active" data-tab="dungeon">◇ <span>Dungeon</span></button>
+        <button class="nav-item" data-tab="creatures">◈ <span>Criaturas</span></button>
+        <button class="nav-item" data-tab="evolutions">⟠ <span>Evoluções</span></button>
+        <button class="nav-item" data-tab="ranch">❖ <span>Rancho</span></button>
+        <button class="nav-item" data-tab="trainer">✦ <span>Treinador</span></button>
+        <button class="nav-item" data-tab="arena">⚔ <span>Arena</span></button>
+        <div class="nav-foot">Imagens e nomes ainda são exploratórios.<br>O combate e a economia não estão implementados.</div>
+      </nav>
+      <main id="app" class="content" tabindex="-1" aria-live="polite"></main>
+    </div>
+    <section id="dock" class="dock" aria-label="Simulação visual do modo desktop"></section>
+    <footer class="footer">Protótipo visual local · Sem login, telemetria, compras ou servidor · Dados ilustrativos</footer>
+  </div>
+  <noscript>Ative JavaScript para navegar no protótipo.</noscript>
+</body>
+</html>

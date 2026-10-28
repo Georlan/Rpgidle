@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 32" width="576" height="192" shape-rendering="crispEdges" role="img" aria-label="Três efeitos visuais reutilizáveis">
+<title>FX exploratórios — corte, defesa, despertar</title>
+<g fill="none" stroke="#C69D66" stroke-width="2"><path d="M5 23 Q13 7 27 5"/><path d="M6 27 Q19 14 29 13" stroke="#ECE3D2"/></g>
+<g fill="none" stroke="#6AAE9F" stroke-width="2"><path d="M48 3 L59 10 V20 L48 29 L37 20 V10Z"/><path d="M48 7 V25 M40 16 H56" stroke="#ECE3D2"/></g>
+<g fill="none" stroke="#C69D66" stroke-width="2"><circle cx="80" cy="16" r="10"/><path d="M80 2 V30 M66 16 H94 M70 6 L90 26 M90 6 L70 26"/></g>
+</svg>

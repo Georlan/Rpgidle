@@ -1,0 +1,94 @@
+{
+  "version": "0.2-concept",
+  "preview_only": true,
+  "creatures": [
+    {
+      "id": "CR001",
+      "name": "Lunaro",
+      "kind": "Luz",
+      "art": "../../assets/01_creatures/CR001_Lunaro/concept_forms/CR001_G1_concept_preview.png",
+      "status": "piloto_extraido"
+    },
+    {
+      "id": "CR002",
+      "name": "Brumelo",
+      "kind": "Bosque",
+      "art": "../../assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg",
+      "status": "silhueta_conceitual"
+    },
+    {
+      "id": "CR003",
+      "name": "Ferru",
+      "kind": "Metal",
+      "art": "../../assets/01_creatures/CR003_Ferru/CR003_G1_placeholder.svg",
+      "status": "silhueta_conceitual"
+    }
+  ],
+  "forms": [
+    {
+      "id": "CR001_G1",
+      "owner": "CR001",
+      "grade": 1,
+      "name": "Inicial",
+      "parent": null,
+      "branch": "base",
+      "status": "preview"
+    },
+    {
+      "id": "CR001_G2_PROT",
+      "owner": "CR001",
+      "grade": 2,
+      "name": "Guardião",
+      "parent": "CR001_G1",
+      "branch": "protecao",
+      "status": "preview"
+    },
+    {
+      "id": "CR001_G2_AGI",
+      "owner": "CR001",
+      "grade": 2,
+      "name": "Rastreador",
+      "parent": "CR001_G1",
+      "branch": "velocidade",
+      "status": "preview"
+    },
+    {
+      "id": "CR001_G3_PROT",
+      "owner": "CR001",
+      "grade": 3,
+      "name": "Sentinela",
+      "parent": "CR001_G2_PROT",
+      "branch": "protecao",
+      "status": "preview"
+    },
+    {
+      "id": "CR001_G3_AGI",
+      "owner": "CR001",
+      "grade": 3,
+      "name": "Arauto",
+      "parent": "CR001_G2_AGI",
+      "branch": "velocidade",
+      "status": "preview"
+    },
+    {
+      "id": "CR001_G4",
+      "owner": "CR001",
+      "grade": 4,
+      "name": "Transcendente",
+      "parent": "CR001_G3_PROT",
+      "other_possible_parent": "CR001_G3_AGI",
+      "branch": "hibrida",
+      "status": "preview"
+    }
+  ],
+  "technique_slots_per_creature": 3,
+  "active_creatures": 3,
+  "trainer_signature_slots": 1,
+  "canonical_requirements": "unresolved",
+  "numbers_in_ui": "mock_only",
+  "signature_families": [
+    "Proteção",
+    "Ofensiva",
+    "Estratégia"
+  ]
+}

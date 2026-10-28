@@ -12,3 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate manifests and required documentation
         run: python3 scripts/validate_structure.py
+      - name: Validate visual slice assets and navigation
+        run: python3 scripts/validate_visual_slice.py
+      - name: Check JavaScript syntax
+        run: node --check prototypes/visual-slice-v02/app.js
