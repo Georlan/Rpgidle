@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "pack_version": "0.2-visual-slice",
+  "pack_version": "0.3-animated-pose-preview",
   "name_status": "provisional",
   "current_asset_state": "concept_only",
   "character_ids": [
@@ -44,12 +44,19 @@
       "type": "image/svg+xml",
       "status": "concept_fx",
       "notes": "Corte, escudo, despertar. Referência visual não animada."
+    },
+    {
+      "path": "assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "6 poses distintas, atlas horizontal 64×48 por célula, quantização 32 cores; estudo, não animação final. Baseline consistente; CR001 somente."
     }
   ],
   "notes": [
     "Duas prévias selecionadas foram importadas; o kit conceitual completo permanece no ZIP do chat.",
     "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
     "Animações e sprites precisam de revisão antes de entrar no build.",
-    "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real."
+    "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real.",
+    "A Godot reproduz poses distintas via SpriteFrames; Tween acrescenta suavidade entre key poses. Idle/Walk são ciclos de estudo; ainda faltam inbetweens finais."
   ]
 }
