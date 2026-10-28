@@ -2,6 +2,7 @@ extends Control
 ## Vertical slice de INTERFACE: nenhuma decisão aqui calcula dano, loot ou progresso.
 const Bindings = preload("res://game/scripts/input_bindings.gd")
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
+const DungeonStage = preload("res://game/scripts/dungeon_stage.gd")
 
 const SCREENS := ["Dungeon", "Criaturas", "Evoluções", "Rancho", "Sistema", "Arena"]
 const PETS := [
@@ -40,6 +41,7 @@ var _page_body: Label
 var _action_bar: HFlowContainer
 var _auto_demo_button: Button
 var _pet_row: HBoxContainer
+var _stage: Control
 var _hint: Label
 var _content: VBoxContainer
 var _navigation: HBoxContainer
@@ -169,6 +171,12 @@ func _build_interface() -> void:
     _page_body.add_theme_color_override("font_color", Color("#bdd0c9"))
     _content.add_child(_page_body)
 
+    _stage = DungeonStage.new()
+    _stage.custom_minimum_size = Vector2(0, 245)
+    _stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    _content.add_child(_stage)
+
     _pet_row = HBoxContainer.new()
     _pet_row.add_theme_constant_override("separation", 12)
     _content.add_child(_pet_row)
@@ -195,11 +203,14 @@ func _render() -> void:
         _tabs[i].modulate = Color("#c69d66") if i == current_screen else Color.WHITE
 
     _compact_status.text = "Andar %d  ·  3 criaturas\nModo compacto — apenas visual" % preview_floor
+    _stage.visible = current_screen == 0
+    _stage.set_floor_preview(preview_floor)
+    _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
+    _page_body.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if current_screen == 0 else Control.SIZE_EXPAND_FILL
     _page_title.text = SCREENS[current_screen] + "  /  DEMONSTRAÇÃO"
     match current_screen:
         0:
             _page_body.text = "Dungeon infinita — Andar %d\n\nReinício voluntário altera somente o andar nesta demonstração. Criaturas, atributos e formas não são reiniciados. Nenhum combate ou recompensa está sendo calculado." % preview_floor
-            _render_pets()
             _add_action("Próximo andar (simulação)", _advance_preview)
             _add_action("Reiniciar andar (simulação)", _reset_preview)
         1:
@@ -273,7 +284,7 @@ func _switch_screen(delta: int) -> void:
 func _advance_preview() -> void:
     preview_floor += 1
     _render()
-    _show_motion_state("attack", false)
+    _stage.trigger_preview_action()
 
 
 func _reset_preview() -> void:
@@ -325,6 +336,7 @@ func _toggle_motion_enabled() -> void:
     for picture in _compact_creatures.get_children():
         if picture is CreatureMotion:
             picture.set_motion_enabled(motion_enabled)
+    _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
     if motion_enabled and auto_demo_enabled and not compact:
         _resume_preview_demo()
 
@@ -368,6 +380,7 @@ func _toggle_compact() -> void:
                 if picture is CreatureMotion:
                     picture.stop_demo()
     compact = not compact
+    _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
     # Interface realmente expandida/compacta: mantém os controles para restauração.
     _navigation.visible = not compact
     _content.visible = not compact
