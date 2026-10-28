@@ -18,6 +18,9 @@ func _run() -> void:
     root.add_child(ui)
     print("SMOKE: scene instantiated")
     await process_frame
+    if ui._stage == null:
+        _fail("DungeonStage failed to instantiate")
+        return
 
     _check(ui.current_screen == 0, "starts in dungeon")
     _check(ui.theme != null, "visual theme assigned")

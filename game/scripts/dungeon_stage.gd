@@ -215,7 +215,7 @@ func _draw() -> void:
     # position formulas that drift when the formation changes.
     for i in range(_actors.size()):
         var actor = _actors[i]
-        var center := Vector2(actor.position.x + actor.size.x * 0.5, actor.position.y + actor.size.y - 1.5)
+        var center: Vector2 = Vector2(actor.position.x + actor.size.x * 0.5, actor.position.y + actor.size.y - 1.5)
         var radius: float = 24.0 if i == 0 else 27.0
         draw_set_transform(center, 0.0, Vector2(1.0, 0.21))
         draw_circle(Vector2.ZERO, radius, Color(0.02, 0.07, 0.09, 0.24))
@@ -223,7 +223,7 @@ func _draw() -> void:
     if preview_fx_visible():
         var fx_t: float = clampf((_elapsed - 3.6) / 0.75, 0.0, 1.0)
         var lunaro = _actors[0]
-        var center := lunaro.position + Vector2(lunaro.size.x + 18.0, lunaro.size.y * 0.55)
+        var center: Vector2 = lunaro.position + Vector2(lunaro.size.x + 18.0, lunaro.size.y * 0.55)
         draw_arc(center, 10.0 + fx_t * 15.0, -0.8, 1.6, 15, Color(0.55, 0.83, 0.77, 1.0 - fx_t), 2.0)
     # 3px progress bar belongs to visual loop, not to real character progress.
     var left: float = 13.0
