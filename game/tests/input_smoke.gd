@@ -65,6 +65,13 @@ func _run() -> void:
     _check(not ui._stage.is_preview_running(), "dungeon scene is paused when hidden")
     await process_frame
     _check(ui._pet_row.get_child_count() >= 3, "three visual creature slots")
+    _check(ui._detail_cards.visible, "creature dossier visible")
+    _check(ui._detail_cards.get_child_count() == 3, "attributes, technique header and slots")
+    ui._open_screen(2)
+    _check(ui._detail_cards.visible, "evolution grade strip visible")
+    _check(ui._detail_cards.get_child_count() == 1, "evolution has one four-grade strip")
+    ui._open_screen(1)
+    await process_frame
     var first_block: VBoxContainer = ui._pet_row.get_child(ui._pet_row.get_child_count() - 3) as VBoxContainer
     var first_picture: TextureRect = first_block.get_child(0) as TextureRect
     _check(first_picture.get("creature_id") == "CR001", "first sprite is CR001")
