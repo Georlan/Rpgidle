@@ -31,6 +31,13 @@ python3 -m http.server 8000
 
 Depois abrir `http://localhost:8000/prototypes/visual-slice-v02/`. Os dados de batalha e status são **demonstrativos**.
 
+## Laboratório nativo Godot — controles
+
+O projeto `project.godot` fica na raiz e já abre um laboratório de interface em [Godot 4.6.1](game/README.md), com seis telas navegáveis, controles de mouse/teclado/gamepad, foco protegido fora da janela e modo compacto experimental. Nenhum combate, economia ou PvP foi implementado.
+
+- [Contrato e testes de controle](docs/CONTROLS_TEST_PLAN.md)
+- [Plano Steam Direct, demo, Playtest e release](docs/STEAM_RELEASE_PLAN.md)
+
 ## Próxima etapa
 
 Fechar especificação de produção, organizar os primeiros assets do piloto **CR001** e validar uma animação consistente antes de expandir o bestiário. Não criar sistemas adicionais até a matemática de treinamento, evolução, dungeon e PvP estar definida.
