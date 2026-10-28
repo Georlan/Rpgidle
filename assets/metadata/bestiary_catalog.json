@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "catalog_id": "rpgidle-creatures",
+  "status": "preproduction",
+  "grades_supported": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "description": "Static species and candidate-form definitions; NOT player discovery or evolution unlock data.",
+  "species": [
+    {
+      "species_id": "CR001",
+      "display_name": "Lunaro",
+      "name_status": "provisional",
+      "art_status": "animation_preview",
+      "description_status": "pending",
+      "forms": [
+        {
+          "form_id": "CR001_G1",
+          "grade": 1,
+          "branch_key": "base",
+          "asset": "res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png",
+          "asset_status": "animation_preview"
+        }
+      ]
+    },
+    {
+      "species_id": "CR002",
+      "display_name": "Brumelo",
+      "name_status": "provisional",
+      "art_status": "concept_silhouette",
+      "description_status": "pending",
+      "forms": [
+        {
+          "form_id": "CR002_G1",
+          "grade": 1,
+          "branch_key": "base",
+          "asset": "res://assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg",
+          "asset_status": "concept_silhouette"
+        }
+      ]
+    },
+    {
+      "species_id": "CR003",
+      "display_name": "Ferru",
+      "name_status": "provisional",
+      "art_status": "concept_silhouette",
+      "description_status": "pending",
+      "forms": [
+        {
+          "form_id": "CR003_G1",
+          "grade": 1,
+          "branch_key": "base",
+          "asset": "res://assets/01_creatures/CR003_Ferru/CR003_G1_placeholder.svg",
+          "asset_status": "concept_silhouette"
+        }
+      ]
+    }
+  ]
+}

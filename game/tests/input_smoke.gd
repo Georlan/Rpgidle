@@ -1,6 +1,7 @@
 extends SceneTree
 ## Smoke test in Godot's own runtime. No graphics, controller hardware or Steam needed.
 
+const BestiaryCatalog = preload("res://game/scripts/bestiary_catalog.gd")
 var _failures: int = 0
 
 
@@ -22,6 +23,11 @@ func _run() -> void:
         _fail("DungeonStage failed to instantiate")
         return
 
+    _check(BestiaryCatalog.known_species_count() == 3, "bestiary knows only three prototype species")
+    _check(BestiaryCatalog.species_by_id("CR002").get("display_name", "") == "Brumelo", "bestiary species lookup")
+    _check(BestiaryCatalog.form_by_id("CR003", "CR003_G1").get("grade", 0) == 1, "bestiary form lookup")
+    _check(BestiaryCatalog.form_by_id("CR003", "CR003_G4").is_empty(), "unknown evolution is not invented")
+    _check(BestiaryCatalog.species_by_id("CR999").is_empty(), "unregistered species rejected")
     _check(ui.current_screen == 0, "starts in dungeon")
     _check(ui.theme != null, "visual theme assigned")
     _check(ui.theme.has_stylebox("normal", "Button"), "button component has style")
