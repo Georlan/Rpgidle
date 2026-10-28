@@ -2,6 +2,9 @@
 
 ## Concluído
 
+- [x] Referências de jogos e skills auditadas com matriz de inspiração, risco de escopo e licenças.
+- [x] Criada skill original de produção para Rpgidle, sem dependências instaladas.
+
 - [x] Visão: dungeon idle infinita, 3 criaturas, 4 graus e formas individuais.
 - [x] Potencial exclusivo do treinador; Sistema observa decisões e desperta uma Carta de Assinatura para a equipe.
 - [x] Modelo comercial: premium + cosméticos; PvP com normalização.
@@ -26,6 +29,10 @@
 - [ ] Estabelecer paleta, pixel grid, tamanhos de exportação e pivôs finais.
 
 ## Próximas etapas
+
+- [ ] Inspecionar os 3 avisos reportados na Godot Linux (captura exibe 0 erros; avisos não diagnosticados).
+- [ ] Normalizar sprite CR001 e concluir primeiro loop idle real com pivô estável.
+- [ ] Comparar as três criaturas em tamanho real; CR002 e CR003 continuam silhuetas provisórias.
 
 - [ ] Modelar a matemática: letras, treino, formas, normalização PvP, Sistema e reset.
 - [ ] Fazer protótipo local de 1 criatura / 1 dungeon / 1 assinatura.
