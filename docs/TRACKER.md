@@ -13,6 +13,11 @@
 
 ## Em andamento
 
+- [x] Códice/Bestiário consultável no Rancho (dados estáticos sem falsa descoberta).
+- [x] Mapa evolutivo ramificado com 4 graus, caminhos alternativos e convergência; preview sem desbloqueios.
+- [ ] Converter artes conceituais G2/G3 em sprites transparentes aprovados e animados, sem inventar G4.
+- [ ] Aprovar UI das árvores no Godot Linux 1100×660 e controle físico.
+
 - [x] Estudos originais em 6 poses para Brumelo e Ferru e integração de SpriteFrames.
 - [x] Validador de PNG/quadros e testes headless das três espécies.
 - [ ] Revisar qualidade visual dos três pets juntos em 1x/2x na Godot local.
