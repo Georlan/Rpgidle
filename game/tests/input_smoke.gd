@@ -43,6 +43,20 @@ func _run() -> void:
     _check(ui.selected_creature == 0, "reset preserves creature")
     _check(ui.preview_grade == 1, "reset preserves creature grade preview")
 
+    ui._open_screen(1)
+    await process_frame
+    _check(ui._pet_row.get_child_count() >= 3, "three visual creature slots")
+    var first_block := ui._pet_row.get_child(ui._pet_row.get_child_count() - 3)
+    var first_picture := first_block.get_child(0)
+    _check(first_picture.creature_id == "CR001", "first sprite is CR001")
+    ui._show_motion_state("walk")
+    _check(first_picture.motion_state == "walk", "walk preview state started")
+    ui._toggle_motion_enabled()
+    _check(not ui.motion_enabled, "motion can be disabled")
+    _check(first_picture.scale == Vector2.ONE, "disabled motion restores original scale")
+    ui._toggle_motion_enabled()
+    _check(ui.motion_enabled, "motion can be reenabled")
+
     ui._open_screen(4)
     var signature: int = ui.preview_signature
     ui._next_signature()
@@ -51,8 +65,14 @@ func _run() -> void:
     ui._toggle_compact()
     _check(ui.compact, "compact activated")
     _check(ui.current_screen == 4, "screen persists in compact mode")
+    _check(ui._compact_dock.visible, "compact mode displays creature dock")
+    _check(ui._compact_creatures.get_child_count() == 3, "dock keeps all three creatures")
+    _check(ui._compact_expand.visible, "mouse-accessible expand button exists")
+    _check(not ui._content.visible, "full panels hidden in compact mode")
     ui._toggle_compact()
     _check(not ui.compact, "compact restored")
+    _check(not ui._compact_dock.visible, "dock hidden in expanded mode")
+    _check(ui._content.visible, "full panels restored")
 
     ui.queue_free()
     print("PASS: navigation, controller mapping, dungeon preview, signature and compact mode")
