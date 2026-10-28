@@ -3,6 +3,7 @@ extends Control
 const Bindings = preload("res://game/scripts/input_bindings.gd")
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
 const DungeonStage = preload("res://game/scripts/dungeon_stage.gd")
+const VisualTheme = preload("res://game/scripts/visual_theme.gd")
 
 const SCREENS := ["Dungeon", "Criaturas", "Evoluções", "Rancho", "Sistema", "Arena"]
 const PETS := [
@@ -42,6 +43,7 @@ var _action_bar: HFlowContainer
 var _auto_demo_button: Button
 var _pet_row: HBoxContainer
 var _stage
+var _signature_preview: TextureRect
 var _hint: Label
 var _content: VBoxContainer
 var _navigation: HBoxContainer
@@ -53,6 +55,7 @@ var _compact_expand: Button
 
 func _ready() -> void:
     Bindings.install()
+    theme = VisualTheme.make_theme()
     get_window().title = "Rpgidle — Laboratório de Controles"
     _build_interface()
     _render()
@@ -89,7 +92,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _build_interface() -> void:
     var background := ColorRect.new()
     background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-    background.color = Color("#101920")
+    background.color = VisualTheme.INK
     background.mouse_filter = Control.MOUSE_FILTER_IGNORE
     add_child(background)
 
@@ -106,9 +109,9 @@ func _build_interface() -> void:
     margin.add_child(layout)
 
     var header := Label.new()
-    header.text = "✦  RPG IDLE    /    LABORATÓRIO DE CONTROLES"
-    header.add_theme_font_size_override("font_size", 21)
-    header.add_theme_color_override("font_color", Color("#c69d66"))
+    header.text = "✦   RPG IDLE       /       CÓDICE"
+    header.add_theme_font_size_override("font_size", 22)
+    header.add_theme_color_override("font_color", VisualTheme.GOLD)
     layout.add_child(header)
 
     _navigation = HBoxContainer.new()
@@ -116,7 +119,7 @@ func _build_interface() -> void:
     layout.add_child(_navigation)
     for index in SCREENS.size():
         var tab := Button.new()
-        tab.text = "%d · %s" % [index + 1, SCREENS[index]]
+        tab.text = "%d   %s" % [index + 1, SCREENS[index]]
         tab.focus_mode = Control.FOCUS_ALL
         tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         tab.pressed.connect(_open_screen.bind(index))
@@ -156,23 +159,31 @@ func _build_interface() -> void:
     layout.add_child(panel)
 
     _content = VBoxContainer.new()
-    _content.add_theme_constant_override("separation", 16)
+    _content.add_theme_constant_override("separation", 12)
     panel.add_child(_content)
 
     _page_title = Label.new()
-    _page_title.add_theme_font_size_override("font_size", 28)
+    _page_title.add_theme_font_size_override("font_size", 25)
     _page_title.add_theme_color_override("font_color", Color("#ece3d2"))
     _content.add_child(_page_title)
 
     _page_body = Label.new()
     _page_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
     _page_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    _page_body.add_theme_font_size_override("font_size", 17)
-    _page_body.add_theme_color_override("font_color", Color("#bdd0c9"))
+    _page_body.add_theme_font_size_override("font_size", 14)
+    _page_body.add_theme_color_override("font_color", VisualTheme.MUTED)
     _content.add_child(_page_body)
 
+    _signature_preview = TextureRect.new()
+    _signature_preview.custom_minimum_size = Vector2(110, 150)
+    _signature_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    _signature_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    _signature_preview.texture = load("res://assets/02_cards/signature/signature_frame_concept.svg")
+    _signature_preview.visible = false
+    _content.add_child(_signature_preview)
+
     _stage = DungeonStage.new()
-    _stage.custom_minimum_size = Vector2(0, 245)
+    _stage.custom_minimum_size = Vector2(0, 270)
     _stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     _stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
     _content.add_child(_stage)
@@ -188,8 +199,8 @@ func _build_interface() -> void:
 
     _hint = Label.new()
     _hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    _hint.text = "Mouse: clicar  |  Teclado: 1–6 telas, Q/E alternar, Enter confirmar, F1 compacto, R reinício (preview)  |  Controle: LB/RB telas, A confirmar, START compacto, Y reinício, B voltar"
-    _hint.add_theme_font_size_override("font_size", 13)
+    _hint.text = "1–6 telas    ·    Q/E navegar    ·    Enter confirmar    ·    F1 desktop    ·    R reiniciar prévia    /    Controle: LB/RB, A, B, Start"
+    _hint.add_theme_font_size_override("font_size", 11)
     _hint.add_theme_color_override("font_color", Color("#6aae9f"))
     layout.add_child(_hint)
 
@@ -200,22 +211,23 @@ func _render() -> void:
     for child in _action_bar.get_children():
         child.queue_free()
     for i in _tabs.size():
-        _tabs[i].modulate = Color("#c69d66") if i == current_screen else Color.WHITE
+        VisualTheme.navigation(_tabs[i], i == current_screen)
 
     _compact_status.text = "Andar %d  ·  3 criaturas\nModo compacto — apenas visual" % preview_floor
     _stage.visible = current_screen == 0
+    _signature_preview.visible = current_screen == 4
     _stage.set_floor_preview(preview_floor)
     _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
     _page_body.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if current_screen == 0 else Control.SIZE_EXPAND_FILL
-    _page_title.text = SCREENS[current_screen] + "  /  DEMONSTRAÇÃO"
+    _page_title.text = SCREENS[current_screen]
     match current_screen:
         0:
-            _page_body.text = "Dungeon infinita — Andar %d\n\nReinício voluntário altera somente o andar nesta demonstração. Criaturas, atributos e formas não são reiniciados. Nenhum combate ou recompensa está sendo calculado." % preview_floor
-            _add_action("Próximo andar (simulação)", _advance_preview)
-            _add_action("Reiniciar andar (simulação)", _reset_preview)
+            _page_body.text = "RUÍNAS DO PRIMEIRO ECO      •      ANDAR %d      •      3 CRIATURAS EM EXPEDIÇÃO  /  PRÉVIA" % preview_floor
+            _add_action("Avançar na prévia", _advance_preview)
+            _add_action("Reiniciar prévia", _reset_preview)
         1:
             var pet: Dictionary = PETS[selected_creature]
-            _page_body.text = "%s  •  %s\n\nForça | Velocidade | Resistência | Inteligência\n\nTrês cartas de técnicas automáticas por criatura. Valores, atributos efetivos e requisitos não estão definidos.\n\n%s" % [pet["name"], pet["id"], pet["note"]]
+            _page_body.text = "%s   •   %s        /        Força · Velocidade · Resistência · Inteligência\nTrês técnicas automáticas por criatura. Visual experimental, sem atributos calculados." % [pet["name"], pet["id"]]
             _render_pets()
             _add_action("Próxima criatura (prévia)", _next_pet)
             if selected_creature == 0:
@@ -227,19 +239,19 @@ func _render() -> void:
                 _auto_demo_button = _add_action("Auto: ligado" if auto_demo_enabled else "Auto: parado", _toggle_auto_demo)
                 _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
         2:
-            _page_body.text = "CR001 — Grau %d / 4\n\nFormas intercambiáveis são liberadas individualmente pela criatura. O registro do rancho conta formas distintas. Ainda não há requisitos matemáticos aprovados." % preview_grade
+            _page_body.text = "CR001     •     GRAU %d / 4\nFormas intercambiáveis por indivíduo. Requisitos definitivos ainda em estudo." % preview_grade
             _render_pets()
             _add_action("Ver próximo grau", _next_grade)
         3:
-            _page_body.text = "Rancho — tema visual: %s\n\nTrês criaturas ativas, demais registradas no rancho. Cosméticos futuros não terão vantagem competitiva." % THEMES[preview_theme]
+            _page_body.text = "HABITAT   /   %s     •     Registro permanente de formas descobertas. Tema cosmético de prévia." % THEMES[preview_theme]
             _render_pets()
             _add_action("Trocar tema cosmético (prévia)", _next_theme)
         4:
-            _page_body.text = "Potencial: exclusivo do treinador\n\nCarta de Assinatura: %s\n\nRompimento → Refinamento → Maestria. A assinatura representa decisões relevantes da dungeon e afeta a equipe inteira. Só uma ativa por vez." % SIGNATURES[preview_signature]
+            _page_body.text = "CARTA DE ASSINATURA   /   %s\nPotencial exclusivo do treinador. Uma carta ativa para a equipe inteira." % SIGNATURES[preview_signature]
             _render_pets()
             _add_action("Inspecionar assinatura (não desbloqueia)", _next_signature)
         5:
-            _page_body.text = "Arena 3 × 3\n\nEquipes e cartas serão normalizadas com limites competitivos. Matchmaking, servidor, cartas, dano e replay não estão implementados."
+            _page_body.text = "ARENA 3 × 3   /   Em desenvolvimento\nComposições e cartas terão limites competitivos. Sem partidas conectadas nesta versão."
             _render_pets()
     _hint.visible = not compact
 
@@ -255,6 +267,7 @@ func _render_pets() -> void:
         var title := Label.new()
         title.text = pet["name"]
         title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        title.add_theme_color_override("font_color", VisualTheme.IVORY)
         block.add_child(title)
         _pet_row.add_child(block)
         if pet["id"] == "CR001" and current_screen == 1 and selected_creature == 0 and auto_demo_enabled and motion_enabled and not compact:
@@ -264,6 +277,8 @@ func _render_pets() -> void:
 func _add_action(label: String, handler: Callable) -> Button:
     var action := Button.new()
     action.text = label
+    if _action_bar.get_child_count() == 0:
+        VisualTheme.primary(action)
     action.focus_mode = Control.FOCUS_ALL
     action.pressed.connect(handler)
     _action_bar.add_child(action)

@@ -16,6 +16,10 @@ func _run() -> void:
     await process_frame
 
     _check(ui.current_screen == 0, "starts in dungeon")
+    _check(ui.theme != null, "visual theme assigned")
+    _check(ui.theme.has_stylebox("normal", "Button"), "button component has style")
+    _check(ui.theme.has_stylebox("panel", "PanelContainer"), "panel component has style")
+    _check(ui._page_title.text == "Dungeon", "screen heading is concise")
     _check(ui.preview_floor == 36, "starts at demonstration floor 36")
     _check(ui._stage.visible, "dungeon stage is visible at startup")
     _check(ui._stage.creature_count() == 3, "dungeon stage includes 3 creatures")
@@ -97,6 +101,8 @@ func _run() -> void:
     ui._toggle_compact()
     _check(first_picture.demo_is_running(), "expanded mode resumes autoplay")
     ui._open_screen(4)
+    _check(ui._signature_preview.visible, "trainer screen shows signature visual")
+    _check(ui._signature_preview.texture != null, "signature image resource imported")
     var signature: int = ui.preview_signature
     ui._next_signature()
     _check(ui.preview_signature == (signature + 1) % 3, "signature preview changes")
