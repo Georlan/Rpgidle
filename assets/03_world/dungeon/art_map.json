@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "id": "WORLD_RUINS_FIRST_ECHO",
+  "stage": "game/scripts/dungeon_stage.gd",
+  "art_origin": {
+    "tool": "OpenAI image generation",
+    "created_at": "2026-10-28",
+    "license_review": "pending-commercial-review",
+    "authorship": "generated original; not hand-drawn final art"
+  },
+  "source": {
+    "backdrop": {
+      "path": "assets/03_world/dungeon/source/ruins_portal_art_original.png",
+      "width": 2098,
+      "height": 750,
+      "alpha": false,
+      "role": "composition_master"
+    },
+    "props": {
+      "path": "assets/03_world/dungeon/source/ruins_props_atlas_original.png",
+      "width": 1448,
+      "height": 1086,
+      "alpha": true,
+      "role": "irregular_atlas_master"
+    }
+  },
+  "exports": {
+    "backdrop": {
+      "path": "assets/03_world/dungeon/exports/ruins_backdrop_448x160.png",
+      "width": 448,
+      "height": 160,
+      "colors": 16,
+      "usage": "active_flattened_stage_background"
+    },
+    "props": {
+      "path": "assets/03_world/dungeon/exports/ruins_props_384x288_preview.png",
+      "width": 384,
+      "height": 288,
+      "colors": 16,
+      "usage": "preview_only_until_extracted"
+    }
+  },
+  "coordinate_contract": {
+    "stage_reference": [
+      448,
+      160
+    ],
+    "viewport_mode": "aspect_cover_bottom_aligned",
+    "floor_baseline_normalized": 0.82,
+    "actor_layout": "3 actors in the foreground; preserve each sprite pivot",
+    "portal_anchor_normalized": [
+      0.83,
+      0.47
+    ],
+    "notes": "normalization is a layout contract, not a map navigation coordinate"
+  },
+  "layers": [
+    {
+      "order": 0,
+      "id": "backdrop",
+      "source": "exports.backdrop",
+      "role": "scene composition; includes portal"
+    },
+    {
+      "order": 1,
+      "id": "ground_contact",
+      "source": "godot_native",
+      "role": "small shadows before actors"
+    },
+    {
+      "order": 2,
+      "id": "actors",
+      "source": "existing_creature_motion",
+      "role": "CR001-CR003"
+    },
+    {
+      "order": 3,
+      "id": "fx",
+      "source": "godot_native",
+      "role": "only short illustrative portal/attack effects"
+    },
+    {
+      "order": 4,
+      "id": "overlay_ui",
+      "source": "existing_códice_theme",
+      "role": "outside stage CanvasItem"
+    }
+  ],
+  "future_modular_layers": [
+    {
+      "id": "far_wall",
+      "replace": "flattened_background",
+      "parallax": 0.15
+    },
+    {
+      "id": "mid_arches",
+      "replace": "flattened_background",
+      "parallax": 0.45
+    },
+    {
+      "id": "props",
+      "source": "original_props_crops",
+      "parallax": 0.8
+    },
+    {
+      "id": "floor",
+      "source": "repeatable_floor_crop",
+      "parallax": 1
+    },
+    {
+      "id": "portal",
+      "source": "cropped_portal",
+      "rule": "hide flat background's existing portal when rendering standalone portal"
+    }
+  ],
+  "crop_candidates_original_props_px": [
+    {
+      "id": "portal",
+      "box": [
+        50,
+        76,
+        605,
+        482
+      ],
+      "pivot": "bottom_center",
+      "state": "needs_manual_cleanup"
+    },
+    {
+      "id": "pillar_vine",
+      "box": [
+        672,
+        34,
+        214,
+        516
+      ],
+      "pivot": "bottom_center",
+      "state": "needs_manual_cleanup"
+    },
+    {
+      "id": "pillar_plain",
+      "box": [
+        897,
+        102,
+        207,
+        455
+      ],
+      "pivot": "bottom_center",
+      "state": "needs_manual_cleanup"
+    },
+    {
+      "id": "pillar_broken",
+      "box": [
+        1145,
+        121,
+        237,
+        441
+      ],
+      "pivot": "bottom_center",
+      "state": "needs_manual_cleanup"
+    },
+    {
+      "id": "banner",
+      "box": [
+        615,
+        566,
+        205,
+        301
+      ],
+      "pivot": "top_center",
+      "state": "needs_manual_cleanup"
+    },
+    {
+      "id": "floor_strip",
+      "box": [
+        46,
+        877,
+        724,
+        163
+      ],
+      "pivot": "bottom_left",
+      "state": "needs_tile_seam_review"
+    }
+  ],
+  "gameplay_contract": "no combat, portals, travel, rewards, or collision implied by artwork"
+}

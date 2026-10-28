@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "pack_version": "0.3-animated-pose-preview",
+  "pack_version": "0.7.1-world-art-pipeline",
   "name_status": "provisional",
   "current_asset_state": "concept_only",
   "character_ids": [
@@ -56,6 +56,30 @@
       "type": "image/svg+xml",
       "status": "in_review",
       "notes": "Original indexed-style pixel art SVG authored for the project, 448×160, no third-party source. In-game visual QA pending."
+    },
+    {
+      "path": "assets/03_world/dungeon/source/ruins_portal_art_original.png",
+      "type": "image/png",
+      "status": "source_generated",
+      "notes": "OpenAI image generation on 2026-10-28; original RGB 2098x750, approved for composition study only; must review IP and style"
+    },
+    {
+      "path": "assets/03_world/dungeon/source/ruins_props_atlas_original.png",
+      "type": "image/png",
+      "status": "source_generated",
+      "notes": "OpenAI image generation on 2026-10-28; original RGBA 1448x1086, transparent props sheet; irregular layout not a TileSet grid"
+    },
+    {
+      "path": "assets/03_world/dungeon/exports/ruins_backdrop_448x160.png",
+      "type": "image/png",
+      "status": "in_review_runtime",
+      "notes": "Optimized 16-color index nearest-neighbor preview from original backdrop; active in DungeonStage; not artwork approved for release"
+    },
+    {
+      "path": "assets/03_world/dungeon/exports/ruins_props_384x288_preview.png",
+      "type": "image/png",
+      "status": "concept_preview",
+      "notes": "Scaled transparent 16-color reference of props sheet; not yet a Godot TileSet or cut objects"
     }
   ],
   "notes": [
@@ -63,6 +87,7 @@
     "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
     "Animações e sprites precisam de revisão antes de entrar no build.",
     "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real.",
-    "A Godot reproduz poses distintas via SpriteFrames; Tween acrescenta suavidade entre key poses. Idle/Walk são ciclos de estudo; ainda faltam inbetweens finais."
+    "A Godot reproduz poses distintas via SpriteFrames; Tween acrescenta suavidade entre key poses. Idle/Walk são ciclos de estudo; ainda faltam inbetweens finais.",
+    "Ruins generated source+preview integrated with sha256 verification; modular props are registered but not yet instanced to prevent duplicate portal."
   ]
 }

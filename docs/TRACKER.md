@@ -13,6 +13,12 @@
 
 ## Em andamento
 
+- [x] Duas artes originais geradas em 28/10/2026 e dois exports otimizados versionados com hashes e proveniência.
+- [x] Cenário de referência conectado à Dungeon com aspect-cover e sem distorção.
+- [x] Contrato da folha de objetos, pivôs e futura separação em camadas documentados.
+- [ ] Extrair/limpar os objetos para TileSet/Node2D modular e revisar visualmente na Godot Linux.
+- [ ] Harmonizar contorno, densidade de pixel e luz entre Lunaro, Brumelo, Ferru e cenário.
+
 - [x] Ficha visual de criatura com 4 atributos e 3 slots de técnicas (sem valores inventados).
 - [x] Faixa dos 4 graus evolutivos com seleção contextual, respeitando requisitos pendentes.
 - [ ] Aprovar hierarquia e clipping na Godot Linux em resoluções menores.
