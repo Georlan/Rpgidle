@@ -38,3 +38,17 @@ Na `game/scripts/creature_motion.gd`, `AnimatedSprite2D` + `SpriteFrames` criam 
 No modo compacto o atlas também é utilizado, sem executar lógicas de combate. **Animar mais quadros não significa automaticamente animação mais suave:** não interpolar sprites pixelados arbitrariamente, pois isso cria borrões e artefatos.
 
 Testes: `python3 scripts/validate_pose_atlas.py` confere integridade PNG/dimensões e o smoke test Godot verifica cada estado de SpriteFrames, desligamento de movimento e retorno à UI.
+
+## Laboratório de sequência automática — v0.5
+
+O componente `CreatureMotion` tem um *autoplay de demonstração*, **sem lógica de combate**:
+`idle → walk → idle → attack → idle → skill → idle`, repetindo enquanto a prévia da CR001 estiver visível.
+
+- Estados de curta duração usam pose inicial, ataque ou habilidade já existentes no atlas 64×48; nenhum frame novo foi fabricado.
+- O autoplay tem relógio próprio por sprite e para quando o usuário escolhe um movimento manual, desativa movimento, sai da tela ou entra em modo compacto.
+- O dock compacto **mantém as criaturas com idle leve**, mas não roda a sequência inteira de demonstração.
+- Brumelo/CR002 e Ferru/CR003 usam respiração em cadências diferentes, somente transformação leve de SVGs estáticos — não são ciclos completos.
+- O painel de botões agora quebra linha para não transbordar em janelas menores.
+- O teste Godot verifica que o autoplay chega até a caminhada, pode ser interrompido por comando manual, é suspenso ao compactar e retomado ao expandir.
+
+**Pendente:** validação visual em monitor real, quadros intermediários desenhados para passos e cauda, verificação de microtravamentos de animação; os números de duração deste protótipo **não** fixam timings futuros de combate.

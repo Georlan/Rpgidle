@@ -26,3 +26,11 @@ No laboratório nativo, `F1` abre uma faixa compacta com os três pets ainda vis
 Na tela **2 · Criaturas**, selecione a CR001 (Lunaro) e experimente os botões `Idle`, `Caminhar`, `Atacar`, `Dano`, `Habilidade` e `Pausar/retomar movimento`.
 
 **Estes são movimentos programáticos de uma imagem conceitual**, não ciclos de sprite sheets finais. O objetivo é validar ritmo, legibilidade e custo antes da curadoria artística final.
+
+## Laboratório de animações v0.5
+
+Na tela **Criaturas**, selecione **Lunaro / CR001**. A sequência de demonstração inicia automaticamente (idle → caminhada → idle → ataque → idle → habilidade → idle). Você pode interrompê-la pelos botões de movimento e reativá-la em **Auto: parado**. O botão **Pausar/retomar movimento** suspende a reprodução inclusive ao compactar a janela.
+
+O modo compacto mantém os três pets em idle e só executa a demonstração completa na tela expandida da CR001. Brumelo e Ferru têm apenas respiração por Tween, em cadências diferentes; não possuem sprite sheets animadas.
+
+**Status:** prévia visual, não animações finais de gameplay.
