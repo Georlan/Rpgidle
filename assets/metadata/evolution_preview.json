@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "status": "concept_preview_only",
+  "grades": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "description": "Exploratory, non-linear presentation only. Not unlock conditions, canon forms, individual progress, or save state.",
+  "species": [
+    {
+      "species_id": "CR001",
+      "status": "concept_preview",
+      "nodes": [
+        {
+          "form_id": "CR001_G1",
+          "grade": 1,
+          "lane": 0.5,
+          "label": "Lunaro · forma inicial",
+          "art_slot": -1,
+          "art_status": "existing_g1",
+          "parents": []
+        }
+      ]
+    },
+    {
+      "species_id": "CR002",
+      "status": "concept_preview",
+      "nodes": [
+        {
+          "form_id": "CR002_G1",
+          "grade": 1,
+          "lane": 0.5,
+          "label": "Forma inicial",
+          "art_slot": -1,
+          "art_status": "existing_g1",
+          "parents": []
+        },
+        {
+          "form_id": "CR002_G2_A",
+          "grade": 2,
+          "lane": 0.26,
+          "label": "Fungaris · provisório",
+          "art_slot": 0,
+          "art_status": "concept_crop",
+          "parents": [
+            "CR002_G1"
+          ]
+        },
+        {
+          "form_id": "CR002_G2_B",
+          "grade": 2,
+          "lane": 0.76,
+          "label": "Ramo alternativo",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR002_G1"
+          ]
+        },
+        {
+          "form_id": "CR002_G3_A",
+          "grade": 3,
+          "lane": 0.26,
+          "label": "Arbólia · provisório",
+          "art_slot": 1,
+          "art_status": "concept_crop",
+          "parents": [
+            "CR002_G2_A",
+            "CR002_G2_B"
+          ]
+        },
+        {
+          "form_id": "CR002_G3_B",
+          "grade": 3,
+          "lane": 0.76,
+          "label": "Outra especialização",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR002_G2_A",
+            "CR002_G2_B"
+          ]
+        },
+        {
+          "form_id": "CR002_G4_A",
+          "grade": 4,
+          "lane": 0.26,
+          "label": "Possível destino A",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR002_G3_A",
+            "CR002_G3_B"
+          ]
+        },
+        {
+          "form_id": "CR002_G4_B",
+          "grade": 4,
+          "lane": 0.76,
+          "label": "Possível destino B",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR002_G3_A",
+            "CR002_G3_B"
+          ]
+        }
+      ]
+    },
+    {
+      "species_id": "CR003",
+      "status": "concept_preview",
+      "nodes": [
+        {
+          "form_id": "CR003_G1",
+          "grade": 1,
+          "lane": 0.5,
+          "label": "Forma inicial",
+          "art_slot": -1,
+          "art_status": "existing_g1",
+          "parents": []
+        },
+        {
+          "form_id": "CR003_G2_A",
+          "grade": 2,
+          "lane": 0.26,
+          "label": "Ferrum · provisório",
+          "art_slot": 2,
+          "art_status": "concept_crop",
+          "parents": [
+            "CR003_G1"
+          ]
+        },
+        {
+          "form_id": "CR003_G2_B",
+          "grade": 2,
+          "lane": 0.76,
+          "label": "Ramo alternativo",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR003_G1"
+          ]
+        },
+        {
+          "form_id": "CR003_G3_A",
+          "grade": 3,
+          "lane": 0.26,
+          "label": "Titanru · provisório",
+          "art_slot": 3,
+          "art_status": "concept_crop",
+          "parents": [
+            "CR003_G2_A",
+            "CR003_G2_B"
+          ]
+        },
+        {
+          "form_id": "CR003_G3_B",
+          "grade": 3,
+          "lane": 0.76,
+          "label": "Outra especialização",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR003_G2_A",
+            "CR003_G2_B"
+          ]
+        },
+        {
+          "form_id": "CR003_G4_A",
+          "grade": 4,
+          "lane": 0.26,
+          "label": "Possível destino A",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR003_G3_A",
+            "CR003_G3_B"
+          ]
+        },
+        {
+          "form_id": "CR003_G4_B",
+          "grade": 4,
+          "lane": 0.76,
+          "label": "Possível destino B",
+          "art_slot": -1,
+          "art_status": "undrawn",
+          "parents": [
+            "CR003_G3_A",
+            "CR003_G3_B"
+          ]
+        }
+      ]
+    }
+  ]
+}
