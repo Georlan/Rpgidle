@@ -2,7 +2,7 @@ extends Control
 ## Dungeon stage v0.6 — visual-only loop. No enemies, health, damage or rewards.
 ## Uses existing CreatureMotion previews; Godot 4.6.1 CanvasItem drawing.
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
-const BACKDROP: Texture2D = preload("res://assets/03_world/dungeon/ruins_first_echo_backdrop.png")
+const BACKDROP: Texture2D = preload("res://assets/03_world/dungeon/ruins_first_echo_backdrop.svg")
 const CREATURES = [
     {"id":"CR001","path":"res://assets/01_creatures/CR001_Lunaro/concept_forms/CR001_G1_concept_preview.png"},
     {"id":"CR002","path":"res://assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg"},
