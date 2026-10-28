@@ -287,7 +287,6 @@ func _render() -> void:
             _add_action("Próxima espécie", _next_evolution_species)
             _add_action("Espécie anterior", _previous_evolution_species)
         3:
-            var selected: Dictionary = PETS[preview_registry_species]
             _page_body.text = "BESTIÁRIO DO SISTEMA   /   %d ESPÉCIES NO CATÁLOGO • NÃO É O REGISTRO DO JOGADOR" % BestiaryCatalog.known_species_count()
             _render_pets()
             _render_bestiary_details()

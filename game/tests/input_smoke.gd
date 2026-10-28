@@ -2,6 +2,7 @@ extends SceneTree
 ## Smoke test in Godot's own runtime. No graphics, controller hardware or Steam needed.
 
 const BestiaryCatalog = preload("res://game/scripts/bestiary_catalog.gd")
+const EvolutionPreviewData = preload("res://game/scripts/evolution_preview_data.gd")
 var _failures: int = 0
 
 
@@ -97,8 +98,26 @@ func _run() -> void:
     _check(ui._detail_cards.visible, "creature dossier visible")
     _check(ui._detail_cards.get_child_count() == 3, "attributes, technique header and slots")
     ui._open_screen(2)
-    _check(ui._detail_cards.visible, "evolution grade strip visible")
-    _check(ui._detail_cards.get_child_count() == 1, "evolution has one four-grade strip")
+    _check(ui._evolution_graph.visible, "evolution graph visible")
+    _check(ui._evolution_graph.node_count() == 7, "Brumelo has seven preview nodes over four grades")
+    _check(ui._evolution_graph.selected_id == "CR002_G1", "initial G1 concept selected")
+    _check(ui._detail_cards.visible, "evolution detail visible")
+    ui._evolution_graph.select_form("CR002_G3_A")
+    _check(ui.selected_preview_form_id == "CR002_G3_A", "selecting branch updates detail")
+    _check(ui._page_body.text.contains("RAMIFICADA"), "tree does not claim linear evolution")
+    ui._next_evolution_species()
+    _check(ui._evolution_graph.node_count() == 7, "Ferru has branch preview too")
+    _check(ui.selected_preview_form_id == "CR003_G1", "switch species resets candidate focus")
+    ui._next_evolution_species()
+    _check(ui._evolution_graph.node_count() == 1, "Lunaro has no invented future forms")
+    _check(EvolutionPreviewData.node_by_id("CR002", "CR002_G4_A").get("grade", 0) == 4, "fourth grade candidate metadata")
+    _check(EvolutionPreviewData.node_by_id("CR003", "CR003_G4_X").is_empty(), "unknown form rejected")
+    ui._open_screen(3)
+    _check(ui._page_body.text.contains("BESTIÁRIO"), "ranch has searchable bestiary section")
+    _check(ui._detail_cards.get_child_count() >= 2, "catalog details shown without discovery state")
+    var registry_index: int = ui.preview_registry_species
+    ui._next_registry_species()
+    _check(ui.preview_registry_species != registry_index, "catalog selection changes species")
     ui._open_screen(1)
     await process_frame
     var first_block: VBoxContainer = ui._pet_row.get_child(ui._pet_row.get_child_count() - 3) as VBoxContainer
