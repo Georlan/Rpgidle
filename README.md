@@ -38,6 +38,14 @@ O projeto `project.godot` fica na raiz e já abre um laboratório de interface e
 - [Contrato e testes de controle](docs/CONTROLS_TEST_PLAN.md)
 - [Plano Steam Direct, demo, Playtest e release](docs/STEAM_RELEASE_PLAN.md)
 
+## Referências e skill de produção
+
+- [Pesquisa cruzada de skills, jogos, licenças e oportunidades](docs/REFERENCE_RESEARCH.md)
+- [Skill local para agentes de código e arte](.agents/skills/rpgidle-production/SKILL.md)
+- [Próxima sequência de produção e critérios de aceite](docs/PRODUCTION_PRIORITY.md)
+
+Agentes devem começar por [AGENTS.md](AGENTS.md). Skills públicas são referências opcionais: a Godot do projeto continua em **4.6.1**, e **nenhum plugin externo foi instalado** nesta etapa.
+
 ## Próxima etapa
 
 Fechar especificação de produção, organizar os primeiros assets do piloto **CR001** e validar uma animação consistente antes de expandir o bestiário. Não criar sistemas adicionais até a matemática de treinamento, evolução, dungeon e PvP estar definida.
