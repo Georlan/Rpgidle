@@ -10,6 +10,13 @@
 
 ## Em andamento
 
+- [x] Projeto Godot importável com laboratório de seis telas e atalhos básicos de teclado/gamepad.
+- [x] Teste headless de navegação e estados demonstrativos preparado no CI.
+- [x] Roadmap técnico de Steam Direct, demo, Playtest, beta branch e publicação documentado.
+- [ ] Homologar Godot e controles físicos em Windows; testar perda de foco e Steam Input.
+- [ ] Implementar overlay click-through real somente após experimento seguro de janela.
+
+
 - [x] Protótipo visual v0.2 com seis telas navegáveis e faixa compacta para teste.
 - [x] Duas silhuetas adicionais (CR002 e CR003) e SVGs modulares de FX/assinatura.
 - [ ] Testar usabilidade visual em janela pequena e desktop real.
