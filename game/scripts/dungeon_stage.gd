@@ -22,6 +22,7 @@ const PHASE_LABELS := {
 const FORMATION_X := [0.375, 0.255, 0.145]
 const FOOT_OFFSETS := [-1.0, 1.0, 2.0]
 
+var _trial_visible := false
 var _actors: Array = []
 var _playing: bool = false
 var _paused: bool = false
@@ -47,6 +48,11 @@ func _ready() -> void:
     set_process(false)
     _position_actors()
     _set_phase(_phase, true)
+    queue_redraw()
+
+
+func set_trial_visible(value: bool) -> void:
+    _trial_visible = value
     queue_redraw()
 
 
@@ -226,6 +232,12 @@ func _draw() -> void:
         var lunaro = _actors[0]
         var center: Vector2 = lunaro.position + Vector2(lunaro.size.x + 18.0, lunaro.size.y * 0.55)
         draw_arc(center, 10.0 + fx_t * 15.0, -0.8, 1.6, 15, Color(0.55, 0.83, 0.77, 1.0 - fx_t), 2.0)
+    if _trial_visible:
+        # An intentionally abstract target for the experiment, not a bestiary species.
+        var target := Vector2(size.x * 0.74, size.y * 0.70)
+        draw_circle(target, 24.0, Color("#384e53"))
+        draw_arc(target, 24.0, 0.0, TAU, 32, Color("#c5a26c"), 2.0)
+        draw_circle(target, 6.0, Color("#8ac9bb"))
     # 3px progress bar belongs to visual loop, not to real character progress.
     var left: float = 13.0
     var bar_y: float = size.y - 7.0

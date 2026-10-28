@@ -1,5 +1,6 @@
 extends Control
-## Vertical slice de INTERFACE: nenhuma decisão aqui calcula dano, loot ou progresso.
+## Interface de prévia com teste de combate isolado e parâmetros provisórios.
+const DungeonTrial = preload("res://game/scripts/dungeon_trial.gd")
 const Bindings = preload("res://game/scripts/input_bindings.gd")
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
 const DungeonStage = preload("res://game/scripts/dungeon_stage.gd")
@@ -29,6 +30,7 @@ const PETS := [
 const SIGNATURES := ["Proteção", "Ofensiva", "Estratégia"]
 const THEMES := ["Bosque", "Crepúsculo", "Noite"]
 
+var trial = null
 var current_screen: int = 0
 var preview_floor: int = 36
 var selected_creature: int = 0
@@ -259,21 +261,26 @@ func _render() -> void:
         0:
             _add_action("Retomar auto" if _stage.is_paused() else "Pausar auto", _toggle_dungeon_pause)
             _add_action("Velocidade: %dx" % int(_stage.preview_speed()), _toggle_dungeon_speed)
-            _add_action("Reiniciar prévia", _reset_preview)
+            _add_action("Reiniciar teste" if trial != null else "Reiniciar prévia", _reset_preview)
+            if trial == null:
+                _add_action("Iniciar teste jogável", _start_trial)
+            else:
+                _add_action("Postura: %s" % ("Pressão" if trial.stance == "pressao" else "Proteção"), _toggle_trial_stance)
+                _add_action("Sair do teste", _exit_trial)
         1:
             var pet: Dictionary = PETS[selected_creature]
             _page_body.text = "%s   •   %s        /        Força · Velocidade · Resistência · Inteligência\nTrês técnicas automáticas por criatura. Visual experimental, sem atributos calculados." % [pet["name"], pet["id"]]
             _render_pets()
             _render_creature_details()
             _add_action("Próxima criatura (prévia)", _next_pet)
+            _add_action("Idle", _show_motion_state.bind("idle"))
+            _add_action("Caminhar", _show_motion_state.bind("walk"))
+            _add_action("Atacar", _show_motion_state.bind("attack"))
+            _add_action("Dano", _show_motion_state.bind("hurt"))
+            _add_action("Habilidade", _show_motion_state.bind("skill"))
             if selected_creature == 0:
-                _add_action("Idle", _show_motion_state.bind("idle"))
-                _add_action("Caminhar", _show_motion_state.bind("walk"))
-                _add_action("Atacar", _show_motion_state.bind("attack"))
-                _add_action("Dano", _show_motion_state.bind("hurt"))
-                _add_action("Habilidade", _show_motion_state.bind("skill"))
                 _auto_demo_button = _add_action("Auto: ligado" if auto_demo_enabled else "Auto: parado", _toggle_auto_demo)
-                _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
+            _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
         2:
             var species_id: String = String(PETS[preview_evolution_species]["id"])
             var graph_info: Dictionary = EvolutionPreviewData.species_graph(species_id)
@@ -469,8 +476,10 @@ func _update_dungeon_hud() -> void:
     var phase_label: String = _stage.preview_phase_label()
     if not motion_enabled:
         phase_label = "Movimento reduzido"
-    _compact_status.text = "Andar %d   ·   %s\nPrévia automática" % [preview_floor, phase_label]
-    if current_screen == 0:
+    _compact_status.text = "Andar %d   ·   %s\n%s" % [preview_floor, phase_label, "Teste pausado no compacto" if trial != null else "Prévia automática"]
+    if current_screen == 0 and trial != null:
+        _page_body.text = "TESTE EXPERIMENTAL · ANDAR %d · EQUIPE %d/%d · ALVO %d/%d · %s\n%s" % [trial.floor_number, trial.team_hp, trial.MAX_TEAM_HP, trial.enemy_hp, trial.MAX_ENEMY_HP, "ENCERRADO" if trial.finished else phase_label, trial.last_event]
+    elif current_screen == 0:
         _page_body.text = "RUÍNAS DO PRIMEIRO ECO  ·  ANDAR %d  ·  %s  ·  %dx  /  SIMULAÇÃO VISUAL" % [
             preview_floor, phase_label, int(_stage.preview_speed())
         ]
@@ -482,6 +491,16 @@ func _on_stage_phase_changed(_phase: String) -> void:
 
 
 func _on_stage_cycle_completed() -> void:
+    if trial != null:
+        trial.resolve_round()
+        preview_floor = trial.floor_number
+        _stage.set_floor_preview(preview_floor)
+        if trial.finished:
+            _stage.set_paused(true)
+            _render()
+        else:
+            _update_dungeon_hud()
+        return
     # Preview-only floor: the creature roster and forms remain untouched.
     preview_floor += 1
     _stage.set_floor_preview(preview_floor)
@@ -489,6 +508,8 @@ func _on_stage_cycle_completed() -> void:
 
 
 func _toggle_dungeon_pause() -> void:
+    if trial != null and trial.finished:
+        return
     _stage.set_paused(not _stage.is_paused())
     _render()
 
@@ -499,7 +520,33 @@ func _toggle_dungeon_speed() -> void:
     _render()
 
 
+func _start_trial() -> void:
+    trial = DungeonTrial.new()
+    preview_floor = trial.floor_number
+    _stage.set_trial_visible(true)
+    _stage.set_paused(false)
+    _stage.reset_preview_cycle()
+    _render()
+
+
+func _exit_trial() -> void:
+    trial = null
+    _stage.set_trial_visible(false)
+    _stage.set_paused(false)
+    _reset_preview()
+
+
+func _toggle_trial_stance() -> void:
+    if trial == null or trial.finished:
+        return
+    trial.set_stance("protecao" if trial.stance == "pressao" else "pressao")
+    _render()
+
+
 func _reset_preview() -> void:
+    if trial != null:
+        _start_trial()
+        return
     preview_floor = 1
     _stage.set_floor_preview(1)
     _stage.reset_preview_cycle()
@@ -513,7 +560,7 @@ func _show_motion_state(state: String, manual: bool = true) -> void:
     for block in _pet_row.get_children():
         if block.get_child_count() > 0:
             var picture := block.get_child(0)
-            if picture is CreatureMotion and picture.creature_id == "CR001":
+            if picture is CreatureMotion and picture.creature_id == PETS[selected_creature]["id"]:
                 if manual:
                     picture.stop_demo()
                 picture.play_state(state)

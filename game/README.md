@@ -1,6 +1,6 @@
 # Protótipo nativo Godot — controles e interface (pré-produção)
 
-A raiz do repositório contém `project.godot`, abrível pela **Godot 4.6.1** (GDScript, sem C#). Este laboratório **não é o jogo nem uma build de Steam**: serve para verificar interface, foco e mapeamento antes de implementar combate/dungeon.
+A raiz do repositório contém `project.godot`, abrível pela **Godot 4.6.1** (GDScript, sem C#). Este laboratório **não é o jogo final nem uma build de Steam**: inclui uma prévia visual e um teste jogável isolado com regras experimentais.
 
 ## Iniciar
 
@@ -9,7 +9,7 @@ A raiz do repositório contém `project.godot`, abrível pela **Godot 4.6.1** (G
 3. Executar `F6` na cena `game/scenes/main.tscn` ou `F5` no projeto.
 4. Testar `Q/E`, `1–6`, `F1`, `R`, Tab/Enter e gamepad, conforme [Contrato](../../docs/CONTROLS_TEST_PLAN.md).
 
-O jogo usa os PNG/SVG conceituais versionados em `assets/`. Ainda não há sistema de salvar, dano, economia, servidor, assinatura real ou sobreposição transparente click-through.
+O jogo usa os PNG/SVG conceituais versionados em `assets/`. O teste jogável usa dano provisório em memória. Não há sistema de salvar, economia, servidor, assinatura real ou sobreposição transparente click-through.
 
 ## CI
 
@@ -46,3 +46,9 @@ A cena para ao mudar de tela, ao usar F1 no compacto ou ao reduzir movimento. Is
 A Dungeon agora apresenta uma **simulação visual automática** (exploração → ação → conclusão → avanço) e atualização do andar ilustrativo a cada ciclo. **P** ou o botão principal pausam/retomam; **V** alterna 1x e 2x; **R** reinicia somente a prévia. A equipe e as formas não são reiniciadas. Não há combate real, drops ou treinamento.
 
 Ver [contrato do ciclo](../docs/IDLE_PREVIEW_V09.md) para estados e testes.
+
+## Teste jogável de dungeon (experimental)
+
+Na aba **Dungeon**, clique em **Iniciar teste jogável**. A equipe enfrenta um alvo abstrato: ao fim de cada ciclo automático ocorre uma rodada. **Postura: Pressão/Proteção** alterna o compromisso entre dano causado e recebido; **P** pausa, **V** alterna 1×/2× e **R** reinicia. Ao vencer, o andar avança; ao esgotar a vida da equipe, o teste para. **Sair do teste** retorna à prévia visual. O teste fica pausado ao trocar de tela ou compactar a janela.
+
+Valores e regra de alvo são simulação descartável, não balanceamento, inimigo de bestiário ou decisão final. Não há salvamento, evolução, recompensa, treino, técnicas ou assinatura funcional. Reiniciar o teste não altera criaturas ou formas.
