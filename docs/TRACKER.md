@@ -13,6 +13,10 @@
 
 ## Em andamento
 
+- [x] Design system Códice: paleta, painéis, botões, foco, abas e hierarquia das seis telas.
+- [x] Carta de Assinatura integrada como prévia gráfica real na tela do Sistema.
+- [ ] Avaliar interface em Godot Linux com screenshot real e controle físico.
+
 - [x] Palco visual de Dungeon v0.6: ruínas, piso, portal, equipe 3×, caminhada, ataque e FX de demonstração.
 - [x] Pausa automática da cena ao trocar de tela, compactar ou desativar movimento.
 - [ ] Aprovar composição, escala e ritmo no Linux/Windows com capturas reais.
