@@ -35,3 +35,9 @@ Abrir `http://localhost:8000/prototypes/visual-slice-v02/`.
 ## Validação
 
 `python3 scripts/validate_visual_slice.py` checa integridade das referências do catálogo e existência dos arquivos. As capturas de tela e testes de uso continuam necessários antes de chamar a etapa de concluída.
+
+## Estudos de movimento
+
+O sprite CR001 usa na visualização seu GIF `idle_preview` versionado. Brumelo e Ferru recebem somente deslocamento leve em CSS (não um sprite sheet). A tela do Sistema mostra três ícones SVG de efeitos reutilizáveis. O site respeita `prefers-reduced-motion`.
+
+**Nenhum desses efeitos implementa timings de combate**. É um teste de legibilidade e performance visual.

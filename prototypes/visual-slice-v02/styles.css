@@ -138,3 +138,18 @@ body.compact .dock-critters img {height:60px;width:70px;}
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after {animation:none!important;transition:none!important;scroll-behavior:auto!important;}
 }
+
+/* Motion studies only: in-engine sprites will use real frames and validated timings. */
+@keyframes subtle-idle {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-2px); }
+}
+.dock-critters img,.ranch-scene img { animation:subtle-idle 2.2s steps(2,end) infinite; }
+.dock-critters img:nth-child(2),.ranch-scene img:nth-child(2) { animation-delay:-.7s; }
+.dock-critters img:nth-child(3),.ranch-scene img:nth-child(3) { animation-delay:-1.25s; }
+.motion-fx { margin-top:16px;display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:9px; }
+.motion-fx img { width:125px;image-rendering:pixelated; }
+.motion-fx small { color:var(--muted); }
+@media(prefers-reduced-motion:reduce){
+  .dock-critters img,.ranch-scene img { animation:none!important; }
+}

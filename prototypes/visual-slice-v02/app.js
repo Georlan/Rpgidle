@@ -24,7 +24,11 @@ const tabs = {
 const $ = (s) => document.querySelector(s);
 const safe = (text) => String(text).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
 const creature = (id) => catalog.creatures.find(c=>c.id===id) || catalog.creatures[0];
-const sprite = (id, title="") => `<img src="${safe(creature(id).art)}" alt="${safe(title || creature(id).name)}" loading="lazy">`;
+const sprite = (id, title="") => {
+  const c=creature(id);
+  const src=id==="CR001"?"../../assets/01_creatures/CR001_Lunaro/animations/CR001_G1_idle_preview.gif":c.art;
+  return `<img src="${safe(src)}" alt="${safe(title || c.name)}" loading="lazy">`;
+};
 const partySprites = () => `<div class="party">${catalog.creatures.map(c=>sprite(c.id)).join("")}</div>`;
 const pageHeading = (tab) => `<div class="topline"><div><span class="eyebrow">PROTÓTIPO / ${safe(tab.toUpperCase())}</span><h1>${safe(tabs[tab][0])}</h1><p>${safe(tabs[tab][1])}</p></div><span class="tag muted">Dados de demonstração</span></div>`;
 const button = (action,label,kind="") => `<button class="btn ${kind}" data-action="${action}" type="button">${label}</button>`;
@@ -120,7 +124,7 @@ function renderTrainer() {
   <div class="layout"><section class="panel"><span class="eyebrow">SISTEMA / POTENCIAL DO TREINADOR</span><h2>O que a sua trajetória desperta</h2>
     <div class="signature-box"><img src="../../assets/02_cards/signature/signature_frame_concept.svg" alt="Moldura conceitual da Carta de Assinatura">
     <div><span class="tag">1 CARTA ATIVA / EQUIPE</span><h2 style="margin-top:14px">${safe(state.signature)}</h2><p>${safe(notes[state.signature])}</p></div></div>
-    <div class="callout">A primeira assinatura nasce de feitos e decisões relevantes da dungeon, não de um sorteio. Os exemplos aqui não realizam um despertar real.</div>
+    <div class="callout">A primeira assinatura nasce de feitos e decisões relevantes da dungeon, não de um sorteio. Os exemplos aqui não realizam um despertar real.</div><div class="motion-fx"><img src="../../assets/05_fx/fx_examples.svg" alt="Estudos de efeitos de corte, defesa e despertar"><small>Estudos de FX: camadas independentes do sprite, ainda sem timings de combate.</small></div>
   </section>
   <div class="stack">
    <section class="panel"><span class="eyebrow">IDENTIDADES CONCEITUAIS</span><h2>Famílias de assinatura</h2><div class="stack" style="gap:8px">
