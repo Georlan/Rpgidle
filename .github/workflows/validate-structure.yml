@@ -20,5 +20,7 @@ jobs:
         run: python3 scripts/validate_pose_atlas.py
       - name: Verify new world art sources and exports
         run: python3 scripts/validate_world_art.py
+      - name: Validate static bestiary catalog
+        run: python3 scripts/validate_bestiary.py
       - name: Check JavaScript syntax
         run: node --check prototypes/visual-slice-v02/app.js
