@@ -46,11 +46,11 @@ func _run() -> void:
     ui._open_screen(1)
     await process_frame
     _check(ui._pet_row.get_child_count() >= 3, "three visual creature slots")
-    var first_block := ui._pet_row.get_child(ui._pet_row.get_child_count() - 3)
-    var first_picture := first_block.get_child(0)
-    _check(first_picture.creature_id == "CR001", "first sprite is CR001")
+    var first_block: VBoxContainer = ui._pet_row.get_child(ui._pet_row.get_child_count() - 3) as VBoxContainer
+    var first_picture: TextureRect = first_block.get_child(0) as TextureRect
+    _check(first_picture.get("creature_id") == "CR001", "first sprite is CR001")
     ui._show_motion_state("walk")
-    _check(first_picture.motion_state == "walk", "walk preview state started")
+    _check(first_picture.get("motion_state") == "walk", "walk preview state started")
     ui._toggle_motion_enabled()
     _check(not ui.motion_enabled, "motion can be disabled")
     _check(first_picture.scale == Vector2.ONE, "disabled motion restores original scale")
