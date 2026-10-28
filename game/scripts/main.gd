@@ -32,11 +32,13 @@ var preview_signature: int = 0
 var preview_theme: int = 0
 var compact: bool = false
 var motion_enabled: bool = true
+var auto_demo_enabled: bool = true
 
 var _tabs: Array[Button] = []
 var _page_title: Label
 var _page_body: Label
-var _action_bar: HBoxContainer
+var _action_bar: HFlowContainer
+var _auto_demo_button: Button
 var _pet_row: HBoxContainer
 var _hint: Label
 var _content: VBoxContainer
@@ -171,8 +173,9 @@ func _build_interface() -> void:
     _pet_row.add_theme_constant_override("separation", 12)
     _content.add_child(_pet_row)
 
-    _action_bar = HBoxContainer.new()
-    _action_bar.add_theme_constant_override("separation", 9)
+    _action_bar = HFlowContainer.new()
+    _action_bar.add_theme_constant_override("h_separation", 9)
+    _action_bar.add_theme_constant_override("v_separation", 7)
     _content.add_child(_action_bar)
 
     _hint = Label.new()
@@ -210,6 +213,7 @@ func _render() -> void:
                 _add_action("Atacar", _show_motion_state.bind("attack"))
                 _add_action("Dano", _show_motion_state.bind("hurt"))
                 _add_action("Habilidade", _show_motion_state.bind("skill"))
+                _auto_demo_button = _add_action("Auto: ligado" if auto_demo_enabled else "Auto: parado", _toggle_auto_demo)
                 _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
         2:
             _page_body.text = "CR001 — Grau %d / 4\n\nFormas intercambiáveis são liberadas individualmente pela criatura. O registro do rancho conta formas distintas. Ainda não há requisitos matemáticos aprovados." % preview_grade
@@ -242,14 +246,17 @@ func _render_pets() -> void:
         title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         block.add_child(title)
         _pet_row.add_child(block)
+        if pet["id"] == "CR001" and current_screen == 1 and selected_creature == 0 and auto_demo_enabled and motion_enabled and not compact:
+            picture.start_demo()
 
 
-func _add_action(label: String, handler: Callable) -> void:
+func _add_action(label: String, handler: Callable) -> Button:
     var action := Button.new()
     action.text = label
     action.focus_mode = Control.FOCUS_ALL
     action.pressed.connect(handler)
     _action_bar.add_child(action)
+    return action
 
 
 func _open_screen(index: int) -> void:
@@ -266,7 +273,7 @@ func _switch_screen(delta: int) -> void:
 func _advance_preview() -> void:
     preview_floor += 1
     _render()
-    _show_motion_state("attack")
+    _show_motion_state("attack", false)
 
 
 func _reset_preview() -> void:
@@ -274,13 +281,38 @@ func _reset_preview() -> void:
     _render()
 
 
-func _show_motion_state(state: String) -> void:
-    # A motion preview, not gameplay damage or a completed sprite animation.
+func _show_motion_state(state: String, manual: bool = true) -> void:
+    # A motion preview, not combat. Manual selection overrides the autoplay schedule.
+    if manual:
+        auto_demo_enabled = false
     for block in _pet_row.get_children():
         if block.get_child_count() > 0:
             var picture := block.get_child(0)
             if picture is CreatureMotion and picture.creature_id == "CR001":
+                if manual:
+                    picture.stop_demo()
                 picture.play_state(state)
+    _update_auto_demo_button()
+
+
+func _update_auto_demo_button() -> void:
+    if is_instance_valid(_auto_demo_button):
+        _auto_demo_button.text = "Auto: ligado" if auto_demo_enabled else "Auto: parado"
+
+
+func _toggle_auto_demo() -> void:
+    auto_demo_enabled = not auto_demo_enabled
+    for block in _pet_row.get_children():
+        if block.get_child_count() == 0:
+            continue
+        var picture := block.get_child(0)
+        if picture is CreatureMotion and picture.creature_id == "CR001":
+            if auto_demo_enabled and motion_enabled and not compact:
+                picture.start_demo()
+            else:
+                picture.stop_demo()
+                picture.play_state("idle")
+    _update_auto_demo_button()
 
 
 func _toggle_motion_enabled() -> void:
@@ -293,6 +325,19 @@ func _toggle_motion_enabled() -> void:
     for picture in _compact_creatures.get_children():
         if picture is CreatureMotion:
             picture.set_motion_enabled(motion_enabled)
+    if motion_enabled and auto_demo_enabled and not compact:
+        _resume_preview_demo()
+
+
+func _resume_preview_demo() -> void:
+    if current_screen != 1 or selected_creature != 0 or not motion_enabled or not auto_demo_enabled or compact:
+        return
+    for block in _pet_row.get_children():
+        if block.get_child_count() == 0:
+            continue
+        var picture := block.get_child(0)
+        if picture is CreatureMotion and picture.creature_id == "CR001":
+            picture.start_demo()
 
 
 func _next_pet() -> void:
@@ -316,6 +361,12 @@ func _next_signature() -> void:
 
 
 func _toggle_compact() -> void:
+    if not compact:
+        for block in _pet_row.get_children():
+            if block.get_child_count() > 0:
+                var picture := block.get_child(0)
+                if picture is CreatureMotion:
+                    picture.stop_demo()
     compact = not compact
     # Interface realmente expandida/compacta: mantém os controles para restauração.
     _navigation.visible = not compact
@@ -328,3 +379,4 @@ func _toggle_compact() -> void:
         _compact_expand.grab_focus()
     else:
         _tabs[current_screen].grab_focus()
+        _resume_preview_demo()
