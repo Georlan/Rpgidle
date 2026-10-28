@@ -4,6 +4,9 @@ const Bindings = preload("res://game/scripts/input_bindings.gd")
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
 const DungeonStage = preload("res://game/scripts/dungeon_stage.gd")
 const VisualTheme = preload("res://game/scripts/visual_theme.gd")
+const BestiaryCatalog = preload("res://game/scripts/bestiary_catalog.gd")
+const EvolutionPreviewData = preload("res://game/scripts/evolution_preview_data.gd")
+const EvolutionGraph = preload("res://game/scripts/evolution_graph.gd")
 
 const SCREENS := ["Dungeon", "Criaturas", "Evoluções", "Rancho", "Sistema", "Arena"]
 const PETS := [
@@ -30,6 +33,9 @@ var current_screen: int = 0
 var preview_floor: int = 36
 var selected_creature: int = 0
 var preview_grade: int = 1
+var preview_evolution_species: int = 1
+var preview_registry_species: int = 0
+var selected_preview_form_id: String = ""
 var preview_signature: int = 0
 var preview_theme: int = 0
 var compact: bool = false
@@ -43,6 +49,7 @@ var _action_bar: HFlowContainer
 var _auto_demo_button: Button
 var _pet_row: HBoxContainer
 var _detail_cards: VBoxContainer
+var _evolution_graph: Control
 var _stage
 var _signature_preview: TextureRect
 var _hint: Label
@@ -197,6 +204,13 @@ func _build_interface() -> void:
     _stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
     _content.add_child(_stage)
 
+    _evolution_graph = EvolutionGraph.new()
+    _evolution_graph.custom_minimum_size = Vector2(0, 210)
+    _evolution_graph.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _evolution_graph.candidate_selected.connect(_on_preview_form_selected)
+    _evolution_graph.visible = false
+    _content.add_child(_evolution_graph)
+
     _pet_row = HBoxContainer.new()
     _pet_row.add_theme_constant_override("separation", 12)
     _content.add_child(_pet_row)
@@ -229,7 +243,8 @@ func _render() -> void:
     for child in _detail_cards.get_children():
         _detail_cards.remove_child(child)
         child.queue_free()
-    _detail_cards.visible = current_screen == 1 or current_screen == 2
+    _detail_cards.visible = current_screen == 1 or current_screen == 2 or current_screen == 3
+    _evolution_graph.visible = current_screen == 2
     for i in _tabs.size():
         VisualTheme.navigation(_tabs[i], i == current_screen)
 
@@ -260,14 +275,24 @@ func _render() -> void:
                 _auto_demo_button = _add_action("Auto: ligado" if auto_demo_enabled else "Auto: parado", _toggle_auto_demo)
                 _add_action("Pausar/retomar movimento", _toggle_motion_enabled)
         2:
-            _page_body.text = "CR001     •     GRAU %d / 4\nFormas intercambiáveis por indivíduo. Requisitos definitivos ainda em estudo." % preview_grade
-            _render_pets()
+            var species_id: String = String(PETS[preview_evolution_species]["id"])
+            var graph_info: Dictionary = EvolutionPreviewData.species_graph(species_id)
+            _evolution_graph.configure(graph_info)
+            var nodes: Array = graph_info.get("nodes", [])
+            if selected_preview_form_id.is_empty() or EvolutionPreviewData.node_by_id(species_id, selected_preview_form_id).is_empty():
+                selected_preview_form_id = String(nodes[0]["form_id"]) if not nodes.is_empty() else ""
+            _evolution_graph.select_form(selected_preview_form_id)
+            _page_body.text = "%s   /   ÁRVORE RAMIFICADA • 4 GRAUS • CONCEITOS" % PETS[preview_evolution_species]["name"]
             _render_evolution_details()
-            _add_action("Ver próximo grau", _next_grade)
+            _add_action("Próxima espécie", _next_evolution_species)
+            _add_action("Espécie anterior", _previous_evolution_species)
         3:
-            _page_body.text = "HABITAT   /   %s     •     Registro permanente de formas descobertas. Tema cosmético de prévia." % THEMES[preview_theme]
+            var selected: Dictionary = PETS[preview_registry_species]
+            _page_body.text = "BESTIÁRIO DO SISTEMA   /   %d ESPÉCIES NO CATÁLOGO • NÃO É O REGISTRO DO JOGADOR" % BestiaryCatalog.known_species_count()
             _render_pets()
-            _add_action("Trocar tema cosmético (prévia)", _next_theme)
+            _render_bestiary_details()
+            _add_action("Consultar próxima espécie", _next_registry_species)
+            _add_action("Habitat: %s (cosmético)" % THEMES[preview_theme], _next_theme)
         4:
             _page_body.text = "CARTA DE ASSINATURA   /   %s\nPotencial exclusivo do treinador. Uma carta ativa para a equipe inteira." % SIGNATURES[preview_signature]
             _render_pets()
@@ -338,14 +363,85 @@ func _render_creature_details() -> void:
 
 
 func _render_evolution_details() -> void:
-    var strip := HFlowContainer.new()
-    strip.add_theme_constant_override("h_separation", 8)
-    strip.add_theme_constant_override("v_separation", 8)
-    var headings := ["I  •  Inicial", "II  •  Ramificações", "III  •  Ramificações", "IV  •  Transcendência"]
-    for i in range(4):
-        var detail := "Prévia selecionada" if preview_grade == i + 1 else "Requisitos em estudo"
-        strip.add_child(_make_info_card(headings[i], detail, preview_grade == i + 1))
-    _detail_cards.add_child(strip)
+    for child in _detail_cards.get_children():
+        _detail_cards.remove_child(child)
+        child.queue_free()
+    var species_id: String = String(PETS[preview_evolution_species]["id"])
+    var info: Dictionary = EvolutionPreviewData.node_by_id(species_id, selected_preview_form_id)
+    if info.is_empty():
+        return
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 12)
+    _detail_cards.add_child(row)
+    var picture := TextureRect.new()
+    picture.custom_minimum_size = Vector2(114, 88)
+    picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    picture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+    var slot: int = int(info.get("art_slot", -1))
+    var atlas_path := "res://assets/01_creatures/evolution_concepts_preview.png"
+    if slot >= 0 and ResourceLoader.exists(atlas_path):
+        var atlas_texture: Texture2D = load(atlas_path)
+        var portrait := AtlasTexture.new()
+        portrait.atlas = atlas_texture
+        portrait.region = Rect2(slot * 80, 0, 80, 66)
+        picture.texture = portrait
+    row.add_child(picture)
+    var copy := VBoxContainer.new()
+    copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(copy)
+    var heading := Label.new()
+    heading.text = "G%d   %s" % [int(info.get("grade", 1)), String(info.get("label", ""))]
+    heading.add_theme_color_override("font_color", VisualTheme.GOLD)
+    copy.add_child(heading)
+    var details := Label.new()
+    details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    var artwork: String = String(info.get("art_status", "undrawn"))
+    details.text = "Arte: %s. Caminhos candidatos; condições ainda não definidas. Nenhuma forma foi desbloqueada." % (
+        "recorte conceitual, sem animação" if artwork == "concept_crop" else "G1 existente" if artwork == "existing_g1" else "não produzida"
+    )
+    details.add_theme_color_override("font_color", VisualTheme.MUTED)
+    copy.add_child(details)
+
+
+func _on_preview_form_selected(info: Dictionary) -> void:
+    selected_preview_form_id = String(info.get("form_id", ""))
+    if current_screen == 2 and _detail_cards != null:
+        _render_evolution_details()
+
+
+func _render_bestiary_details() -> void:
+    var selected: Dictionary = PETS[preview_registry_species]
+    var species_id: String = String(selected["id"])
+    var entry: Dictionary = BestiaryCatalog.species_by_id(species_id)
+    var graph_info: Dictionary = EvolutionPreviewData.species_graph(species_id)
+    var node_count: int = graph_info.get("nodes", []).size()
+    _detail_cards.add_child(_make_info_card(
+        "%s   /   %s" % [species_id, String(entry.get("display_name", ""))],
+        "%d formas/caminhos em prévia visual; o jogo ainda não registra descobertas." % node_count, true
+    ))
+    var hint := Label.new()
+    hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    hint.text = "Catálogo ≠ formas disponíveis. O desbloqueio será por indivíduo; o rancho registrará formas distintas permanentemente."
+    hint.add_theme_color_override("font_color", VisualTheme.MUTED)
+    _detail_cards.add_child(hint)
+
+
+func _next_evolution_species() -> void:
+    preview_evolution_species = wrapi(preview_evolution_species + 1, 0, PETS.size())
+    selected_preview_form_id = ""
+    _render()
+
+
+func _previous_evolution_species() -> void:
+    preview_evolution_species = wrapi(preview_evolution_species - 1, 0, PETS.size())
+    selected_preview_form_id = ""
+    _render()
+
+
+func _next_registry_species() -> void:
+    preview_registry_species = wrapi(preview_registry_species + 1, 0, PETS.size())
+    _render()
 
 
 func _add_action(label: String, handler: Callable) -> Button:
