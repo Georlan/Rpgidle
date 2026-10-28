@@ -26,5 +26,7 @@ jobs:
         run: python3 scripts/validate_evolution_preview.py
       - name: Validate concept portraits PNG structure
         run: python3 scripts/validate_evolution_art.py
+      - name: Validate approved creature art PNGs
+        run: python3 scripts/validate_creature_v012.py
       - name: Check JavaScript syntax
         run: node --check prototypes/visual-slice-v02/app.js

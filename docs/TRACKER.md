@@ -13,6 +13,10 @@
 
 ## Em andamento
 
+- [x] Novos atlas 96×80 para CR002 e CR003, preservando fontes e sprites anteriores.
+- [x] Integração adaptativa no Godot e no catálogo de espécies.
+- [ ] Avaliar visualmente em 1100×660, 1280×720 e modo compacto, principalmente os pivôs.
+
 - [x] Códice/Bestiário consultável no Rancho (dados estáticos sem falsa descoberta).
 - [x] Mapa evolutivo ramificado com 4 graus, caminhos alternativos e convergência; preview sem desbloqueios.
 - [ ] Converter artes conceituais G2/G3 em sprites transparentes aprovados e animados, sem inventar G4.

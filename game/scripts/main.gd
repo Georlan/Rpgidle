@@ -18,12 +18,12 @@ const PETS := [
     {
         "name": "Brumelo", "id": "CR002",
         "path": "res://assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg",
-        "note": "Silhueta SVG"
+        "note": "Arte G1 em revisão"
     },
     {
         "name": "Ferru", "id": "CR003",
         "path": "res://assets/01_creatures/CR003_Ferru/CR003_G1_placeholder.svg",
-        "note": "Silhueta SVG"
+        "note": "Arte G1 em revisão"
     }
 ]
 const SIGNATURES := ["Proteção", "Ofensiva", "Estratégia"]
