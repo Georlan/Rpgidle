@@ -20,6 +20,7 @@ var _demo_tween: Tween
 var _demo_running: bool = false
 var _demo_index: int = -1
 var _sprite_scale: float = 1.0
+var _playback_speed: float = 1.0
 
 
 func configure(id: String, resource_path: String, enabled: bool = true) -> void:
@@ -121,6 +122,16 @@ func _stop_motion() -> void:
         _sprite.rotation_degrees = 0.0
 
 
+func set_playback_speed(value: float) -> void:
+    if value != 1.0 and value != 2.0:
+        return
+    _playback_speed = value
+    if _sprite != null:
+        _sprite.speed_scale = value
+    if _motion != null and _motion.is_valid():
+        _motion.set_speed_scale(value)
+
+
 func set_motion_enabled(enabled: bool) -> void:
     motion_enabled = enabled
     if not enabled:
@@ -179,6 +190,7 @@ func play_state(requested: String) -> void:
             _sprite.animation = &"idle"
             _sprite.frame = 0
             return
+        _sprite.speed_scale = _playback_speed
         _sprite.play(requested)
         # Subtle motion between key poses makes the animation less abrupt.
         _motion = create_tween().set_trans(Tween.TRANS_SINE)
@@ -202,6 +214,7 @@ func play_state(requested: String) -> void:
             "skill":
                 _motion.tween_property(_sprite, "modulate", Color("#a2f2e6"), 0.18)
                 _motion.tween_property(_sprite, "modulate", Color.WHITE, 0.22)
+        _motion.set_speed_scale(_playback_speed)
         return
 
     # Temporary silhouettes: breathe gently but do not pretend to have sprite frames.
@@ -220,6 +233,7 @@ func play_state(requested: String) -> void:
         "hurt":
             _motion.tween_property(self, "modulate", Color("#f3b1a8"), 0.14)
             _motion.tween_property(self, "modulate", Color.WHITE, 0.20)
+    _motion.set_speed_scale(_playback_speed)
 
 
 func _on_animation_finished() -> void:
