@@ -22,7 +22,7 @@ func _run() -> void:
     _check(InputMap.has_action("lab_previous_screen"), "previous screen action")
     _check(InputMap.has_action("lab_toggle_compact"), "compact action")
     _check(InputMap.has_action("lab_reset_preview"), "reset action")
-    _check(Input.ignore_joypad_on_unfocused_application, "gamepad ignored without focus")
+    _check(bool(ProjectSettings.get_setting("input_devices/joypads/ignore_joypad_on_unfocused_application", false)), "gamepad ignored without focus")
 
     var shoulder := InputEventJoypadButton.new()
     shoulder.button_index = JOY_BUTTON_RIGHT_SHOULDER

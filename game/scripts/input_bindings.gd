@@ -9,7 +9,7 @@ static func install() -> void:
     _installed = true
 
     # Um gamepad não deve disparar comandos em um idle desktop sem foco.
-    Input.ignore_joypad_on_unfocused_application = true
+    ProjectSettings.set_setting("input_devices/joypads/ignore_joypad_on_unfocused_application", true)
 
     _add_action("lab_next_screen", [KEY_E], [JOY_BUTTON_RIGHT_SHOULDER])
     _add_action("lab_previous_screen", [KEY_Q], [JOY_BUTTON_LEFT_SHOULDER])
