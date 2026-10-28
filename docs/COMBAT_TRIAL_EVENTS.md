@@ -1,0 +1,9 @@
+# Encontro determinístico experimental
+
+O teste de Dungeon é opt-in e funciona em memória. O núcleo `dungeon_trial.gd` recebe a postura e resolve cada rodada sem acesso à UI, ao relógio, à animação ou a números aleatórios. Sua lista ordenada contém ações de CR001, CR002 e CR003 enquanto o alvo estiver vivo, seguida de resposta do alvo ou vitória; derrota é terminal. Nenhum evento posterior é emitido depois da derrota. Uma vitória avança uma vez e cria o próximo alvo de teste; não há recompensas ou persistência.
+
+Os números são deliberadamente provisórios: alvo 12, vida compartilhada 30, pressão causa 2/2/1 e recebe 4, proteção causa 1/1/1 e recebe 2. Vida compartilhada não representa os atributos individuais definitivos. Não existem técnicas equipáveis, inimigos do bestiário, treinamento ou assinatura neste teste. Nenhum desses valores ou ordem de ação é regra de produto aprovada.
+
+A cena solicita uma rodada ao atravessar a fase de encontro e reproduz ataques apenas para atores presentes nos eventos. O ciclo visual sem teste continua ilustrativo. O relógio da cena percorre os limites de fase em ordem mesmo num delta longo; pausar, trocar de tela ou compactar não causa rodada adicional na retomada. A simulação permanece pausada fora da Dungeon, inclusive no modo compacto; progresso em segundo plano e offline não foram decididos.
+
+O teste automatizado compara 1.000 sequências repetidas, limites de vida, morte antes de resposta, derrota terminal, pausa/retomada e avanço por ciclo. Isso não prova balanceamento nem diversão. Faltam estado individual por criatura, técnicas configuráveis, inimigos reais, eventos com temporização visual própria, persistência, treino e avaliação da arte em movimento.

@@ -200,6 +200,7 @@ func _build_interface() -> void:
 
     _stage = DungeonStage.new()
     _stage.visual_cycle_completed.connect(_on_stage_cycle_completed)
+    _stage.trial_round_requested.connect(_on_trial_round_requested)
     _stage.visual_phase_changed.connect(_on_stage_phase_changed)
     _stage.custom_minimum_size = Vector2(0, 270)
     _stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -492,19 +493,25 @@ func _on_stage_phase_changed(_phase: String) -> void:
 
 func _on_stage_cycle_completed() -> void:
     if trial != null:
-        trial.resolve_round()
-        preview_floor = trial.floor_number
-        _stage.set_floor_preview(preview_floor)
-        if trial.finished:
-            _stage.set_paused(true)
-            _render()
-        else:
-            _update_dungeon_hud()
         return
     # Preview-only floor: the creature roster and forms remain untouched.
     preview_floor += 1
     _stage.set_floor_preview(preview_floor)
     _update_dungeon_hud()
+
+
+func _on_trial_round_requested() -> void:
+    if trial == null or trial.finished:
+        return
+    var events: Array = trial.resolve_round()
+    _stage.play_trial_events(events)
+    preview_floor = trial.floor_number
+    _stage.set_floor_preview(preview_floor)
+    if trial.finished:
+        _stage.set_paused(true)
+        _render()
+    else:
+        _update_dungeon_hud()
 
 
 func _toggle_dungeon_pause() -> void:

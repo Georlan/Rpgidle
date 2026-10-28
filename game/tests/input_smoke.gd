@@ -1,6 +1,7 @@
 extends SceneTree
 ## Smoke test in Godot's own runtime. No graphics, controller hardware or Steam needed.
 
+const DungeonTrial = preload("res://game/scripts/dungeon_trial.gd")
 const BestiaryCatalog = preload("res://game/scripts/bestiary_catalog.gd")
 const EvolutionPreviewData = preload("res://game/scripts/evolution_preview_data.gd")
 var _failures: int = 0
@@ -215,20 +216,49 @@ func _run() -> void:
     _check(ui._content.visible, "full panels restored")
 
     # Explicitly opt into the disposable playable trial; preview remains the default.
+    # Determinism is independent of the UI, animations and random state.
+    for simulation in range(1000):
+        var left = DungeonTrial.new()
+        var right = DungeonTrial.new()
+        for round_index in range(24):
+            var choice := "pressao" if round_index % 2 == 0 else "protecao"
+            left.set_stance(choice)
+            right.set_stance(choice)
+            _check(left.resolve_round() == right.resolve_round(), "repeatable combat events")
+            _check(left.enemy_hp >= 0 and left.team_hp >= 0, "health never negative")
+            if left.finished:
+                _check(left.resolve_round().is_empty(), "finished encounter cannot award again")
+                break
+    var winner = DungeonTrial.new()
+    winner.enemy_hp = 1
+    var victory_events: Array = winner.resolve_round()
+    _check(victory_events.size() == 2 and victory_events[1].type == "victory", "victory stops later attacks and retaliation")
+    _check(winner.team_hp == winner.MAX_TEAM_HP and winner.floor_number == 2, "victory advances once without enemy damage")
+
     ui._start_trial()
+    ui._stage._process(3.3)
+    _check(ui.trial.enemy_hp == 7, "crossing engagement executes one round")
+    ui._toggle_dungeon_pause()
+    ui._stage._process(12.0)
+    _check(ui.trial.enemy_hp == 7, "paused stage does not execute another round")
+    ui._toggle_dungeon_pause()
+    _check(ui.trial.enemy_hp == 7, "resuming in engagement does not replay round")
+    ui._stage._process(8.0)
+    _check(ui.trial.enemy_hp == 2, "one full cycle executes exactly one more round")
+    ui._reset_preview()
     _check(ui.trial != null and ui.preview_floor == 1, "trial starts at floor one")
     _check(ui._page_body.text.contains("TESTE EXPERIMENTAL"), "trial values are identified")
-    ui._on_stage_cycle_completed()
+    ui._on_trial_round_requested()
     _check(ui.trial.enemy_hp == 7 and ui.trial.team_hp == 26, "pressure resolves one round")
     ui._toggle_trial_stance()
-    ui._on_stage_cycle_completed()
+    ui._on_trial_round_requested()
     _check(ui.trial.enemy_hp == 4 and ui.trial.team_hp == 24, "protection changes the tradeoff")
-    ui._on_stage_cycle_completed()
-    ui._on_stage_cycle_completed()
+    ui._on_trial_round_requested()
+    ui._on_trial_round_requested()
     _check(ui.trial.floor_number == 2 and ui.trial.enemy_hp == 12, "victory advances and resets the target")
     var guard := 0
     while not ui.trial.finished and guard < 100:
-        ui._on_stage_cycle_completed()
+        ui._on_trial_round_requested()
         guard += 1
     _check(ui.trial.finished and ui.trial.team_hp == 0 and ui._stage.is_paused(), "defeat ends and pauses trial")
     ui._reset_preview()

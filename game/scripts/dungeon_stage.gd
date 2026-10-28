@@ -3,6 +3,7 @@ extends Control
 ## Separates the visual loop state from each creature's sprite animation.
 signal visual_phase_changed(phase: String)
 signal visual_cycle_completed
+signal trial_round_requested
 
 const CreatureMotion = preload("res://game/scripts/creature_motion.gd")
 const BACKDROP: Texture2D = preload("res://assets/03_world/dungeon/exports/ruins_backdrop_448x160.png")
@@ -143,17 +144,36 @@ func reset_preview_cycle() -> void:
 func _process(delta: float) -> void:
     if not is_preview_running():
         return
-    _elapsed += maxf(delta, 0.0) * _speed
-    if _elapsed >= CYCLE_SECONDS:
-        var completed: int = floori(_elapsed / CYCLE_SECONDS)
-        _elapsed = fposmod(_elapsed, CYCLE_SECONDS)
-        for index in range(completed):
-            visual_cycle_completed.emit()
-    _set_phase(phase_for_time(_elapsed))
+    # Visit every boundary in order, even after a long frame. Never replay a
+    # round just because a view resumes or a phase is redrawn.
+    var remaining: float = maxf(delta, 0.0) * _speed
+    while remaining > 0.0 and is_preview_running():
+        var boundary: float = CYCLE_SECONDS
+        for candidate in [3.2, 4.4, 5.75, CYCLE_SECONDS]:
+            if candidate > _elapsed + 0.00001:
+                boundary = candidate
+                break
+        var step: float = minf(remaining, boundary - _elapsed)
+        _elapsed += step
+        remaining -= step
+        if _elapsed >= boundary - 0.00001:
+            if is_equal_approx(boundary, CYCLE_SECONDS):
+                _elapsed = 0.0
+                visual_cycle_completed.emit()
+            _set_phase(phase_for_time(_elapsed))
+            if _trial_visible and is_equal_approx(boundary, 3.2) and is_preview_running():
+                trial_round_requested.emit()
     _position_actors()
-    # One background texture + three contact shadows; cheap enough for the
-    # preview. Remove redraws altogether when hidden or paused.
     queue_redraw()
+
+
+func play_trial_events(events: Array) -> void:
+    for event in events:
+        if event.get("type", "") != "team_attack":
+            continue
+        for actor in _actors:
+            if actor.creature_id == event.get("actor", ""):
+                actor.play_state("attack")
 
 
 func _set_phase(next_phase: String, force: bool = false) -> void:
@@ -168,7 +188,7 @@ func _set_phase(next_phase: String, force: bool = false) -> void:
         var anim := "idle"
         if next_phase == "explore" or next_phase == "advance":
             anim = "walk"
-        elif next_phase == "engage":
+        elif next_phase == "engage" and not _trial_visible:
             # Presentation only: roles distinguish silhouettes; no damage or actual techniques.
             anim = "skill" if actor.creature_id == "CR002" else "attack"
         actor.play_state(anim)
