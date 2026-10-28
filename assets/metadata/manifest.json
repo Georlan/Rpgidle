@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "pack_version": "0.1-github-seed",
+  "name_status": "provisional",
+  "current_asset_state": "concept_only",
+  "character_ids": [
+    "CR001"
+  ],
+  "assets": [
+    {
+      "path": "assets/01_creatures/CR001_Lunaro/concept_forms/CR001_G1_concept_preview.png",
+      "type": "image/png",
+      "status": "concept_preview",
+      "notes": "Preview reduzido com paleta compactada; exige limpeza."
+    },
+    {
+      "path": "assets/01_creatures/CR001_Lunaro/animations/CR001_G1_idle_preview.gif",
+      "type": "image/gif",
+      "status": "animation_preview",
+      "notes": "Loop demonstrativo, não ciclo final de quadros."
+    }
+  ],
+  "notes": [
+    "Duas prévias selecionadas foram importadas; o kit conceitual completo permanece no ZIP do chat.",
+    "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
+    "Animações e sprites precisam de revisão antes de entrar no build."
+  ]
+}
