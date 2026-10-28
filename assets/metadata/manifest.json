@@ -110,6 +110,30 @@
       "type": "image/png",
       "status": "animation_preview",
       "notes": "From OpenAI-generated original approved in chat 2026-10-28. Indexed PNG with alpha, 6 x 96x80, previews not final inbetweens. Previous atlas preserved."
+    },
+    {
+      "path": "assets/01_creatures/CR002_Brumelo/source/CR002_G1_pose_study_20261028.png",
+      "type": "image/png",
+      "status": "source_generated",
+      "notes": "OpenAI generated 2026-10-28; six-pose study. Runtime export uses thresholded alpha, nearest-neighbor and fixed baseline; preview, not final animation. Previous atlas retained."
+    },
+    {
+      "path": "assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_canon_study_96x80.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "OpenAI generated 2026-10-28; six-pose study. Runtime export uses thresholded alpha, nearest-neighbor and fixed baseline; preview, not final animation. Previous atlas retained."
+    },
+    {
+      "path": "assets/01_creatures/CR003_Ferru/source/CR003_G1_pose_study_20261028.png",
+      "type": "image/png",
+      "status": "source_generated",
+      "notes": "OpenAI generated 2026-10-28; six-pose study. Runtime export uses thresholded alpha, nearest-neighbor and fixed baseline; preview, not final animation. Previous atlas retained."
+    },
+    {
+      "path": "assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_canon_study_96x80.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "OpenAI generated 2026-10-28; six-pose study. Runtime export uses thresholded alpha, nearest-neighbor and fixed baseline; preview, not final animation. Previous atlas retained."
     }
   ],
   "notes": [

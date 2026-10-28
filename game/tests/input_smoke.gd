@@ -132,6 +132,13 @@ func _run() -> void:
         var creature_block: VBoxContainer = ui._pet_row.get_child(idx) as VBoxContainer
         var creature_picture: TextureRect = creature_block.get_child(0) as TextureRect
         _check(creature_picture.get("has_pose_atlas") == true, "new G1 atlas loaded for %s" % creature_picture.get("creature_id"))
+        var active_path: String = creature_picture.ATLAS_PATHS[creature_picture.creature_id]
+        _check(active_path.contains("canon_study"), "new art is the active atlas")
+        var atlas_image: Image = load(active_path).get_image()
+        _check(atlas_image.get_width() == 576 and atlas_image.get_height() == 80, "new atlas dimensions")
+        for cell in range(6):
+            var cell_image: Image = atlas_image.get_region(Rect2i(cell * 96, 0, 96, 80))
+            _check(cell_image.get_used_rect().size.x > 0, "new pose is not empty")
         _check(creature_picture.sprite_cell_size() == Vector2i(96, 80), "approved art uses 96x80 grid")
         for state in ["idle", "walk", "attack", "hurt", "skill"]:
             _check(creature_picture.sprite_frame_count(state) >= 3, "new creature frames: " + state)

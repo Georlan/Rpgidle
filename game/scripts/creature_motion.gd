@@ -4,8 +4,8 @@ extends TextureRect
 ## This is animation art in review, not a released sprite standard.
 const ATLAS_PATHS := {
     "CR001":"res://assets/01_creatures/CR001_Lunaro/sprite_sheets/CR001_G1_6poses_64x48.png",
-    "CR002":"res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_96x80.png",
-    "CR003":"res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_96x80.png"
+    "CR002":"res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_canon_study_96x80.png",
+    "CR003":"res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_canon_study_96x80.png"
 }
 const CELL := Vector2i(64, 48)
 const PREMIUM_CELL := Vector2i(96, 80)
