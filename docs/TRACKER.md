@@ -13,6 +13,10 @@
 
 ## Em andamento
 
+- [x] Estudos originais em 6 poses para Brumelo e Ferru e integração de SpriteFrames.
+- [x] Validador de PNG/quadros e testes headless das três espécies.
+- [ ] Revisar qualidade visual dos três pets juntos em 1x/2x na Godot local.
+
 - [x] Loop visual idle-first com fases: explorar → ação automática → concluir → avançar.
 - [x] Andar demonstrativo avança sozinho ao completar o ciclo, sem mexer em criaturas.
 - [x] Pausa/retomada, velocidade 1x/2x e reset apenas da prévia.

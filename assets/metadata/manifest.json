@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "pack_version": "0.7.1-world-art-pipeline",
+  "pack_version": "0.10-creature-motion-studies",
   "name_status": "provisional",
   "current_asset_state": "concept_only",
   "character_ids": [
@@ -80,6 +80,18 @@
       "type": "image/png",
       "status": "concept_preview",
       "notes": "Scaled transparent 16-color reference of props sheet; not yet a Godot TileSet or cut objects"
+    },
+    {
+      "path": "assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_64x48.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "Original project-authored pixel art. 6 poses with RGBA transparency, common 64×48 cells, grounded baseline, Godot native frames. QA pending."
+    },
+    {
+      "path": "assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_64x48.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "Original project-authored pixel art. 6 poses with RGBA transparency, common 64×48 cells, grounded baseline, Godot native frames. QA pending."
     }
   ],
   "notes": [
@@ -88,6 +100,7 @@
     "Animações e sprites precisam de revisão antes de entrar no build.",
     "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real.",
     "A Godot reproduz poses distintas via SpriteFrames; Tween acrescenta suavidade entre key poses. Idle/Walk são ciclos de estudo; ainda faltam inbetweens finais.",
-    "Ruins generated source+preview integrated with sha256 verification; modular props are registered but not yet instanced to prevent duplicate portal."
+    "Ruins generated source+preview integrated with sha256 verification; modular props are registered but not yet instanced to prevent duplicate portal.",
+    "CR002 and CR003 pose studies were drawn with deterministic pixel primitives specifically for Rpgidle; original SVG placeholders retained for comparison. No third-party characters imported."
   ]
 }
