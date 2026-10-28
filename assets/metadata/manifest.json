@@ -1,10 +1,12 @@
 {
   "schema_version": 1,
-  "pack_version": "0.1-github-seed",
+  "pack_version": "0.2-visual-slice",
   "name_status": "provisional",
   "current_asset_state": "concept_only",
   "character_ids": [
-    "CR001"
+    "CR001",
+    "CR002",
+    "CR003"
   ],
   "assets": [
     {
@@ -18,11 +20,36 @@
       "type": "image/gif",
       "status": "animation_preview",
       "notes": "Loop demonstrativo, não ciclo final de quadros."
+    },
+    {
+      "path": "assets/01_creatures/CR002_Brumelo/CR002_G1_placeholder.svg",
+      "type": "image/svg+xml",
+      "status": "concept_silhouette",
+      "notes": "SVG feito em pixel-grid, sem animação final."
+    },
+    {
+      "path": "assets/01_creatures/CR003_Ferru/CR003_G1_placeholder.svg",
+      "type": "image/svg+xml",
+      "status": "concept_silhouette",
+      "notes": "SVG feito em pixel-grid, sem animação final."
+    },
+    {
+      "path": "assets/02_cards/signature/signature_frame_concept.svg",
+      "type": "image/svg+xml",
+      "status": "concept_ui",
+      "notes": "Moldura editável, sem texto rasterizado."
+    },
+    {
+      "path": "assets/05_fx/fx_examples.svg",
+      "type": "image/svg+xml",
+      "status": "concept_fx",
+      "notes": "Corte, escudo, despertar. Referência visual não animada."
     }
   ],
   "notes": [
     "Duas prévias selecionadas foram importadas; o kit conceitual completo permanece no ZIP do chat.",
     "Pranchas, nomes e habilidades ilustrativos não alteram regras de jogo.",
-    "Animações e sprites precisam de revisão antes de entrar no build."
+    "Animações e sprites precisam de revisão antes de entrar no build.",
+    "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real."
   ]
 }

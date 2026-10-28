@@ -10,6 +10,10 @@
 
 ## Em andamento
 
+- [x] Protótipo visual v0.2 com seis telas navegáveis e faixa compacta para teste.
+- [x] Duas silhuetas adicionais (CR002 e CR003) e SVGs modulares de FX/assinatura.
+- [ ] Testar usabilidade visual em janela pequena e desktop real.
+
 - [ ] Importar/revisar o restante das pranchas e GIFs do kit visual piloto.
 - [ ] Limpar sprite principal CR001 e validar animação quadro a quadro.
 - [ ] Estabelecer paleta, pixel grid, tamanhos de exportação e pivôs finais.
