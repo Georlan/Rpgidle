@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="360" height="480" role="img" aria-label="Carta de Assinatura, moldura exploratória">
+<title>Moldura da Carta de Assinatura — conceito editável</title>
+<rect x="3" y="3" width="114" height="154" rx="8" fill="#202A34" stroke="#C69D66" stroke-width="2"/>
+<rect x="7" y="7" width="106" height="146" rx="5" fill="none" stroke="#6AAE9F" stroke-opacity=".7"/>
+<path d="M15 16 L30 16 M90 16 L105 16 M15 144 L30 144 M90 144 L105 144" stroke="#C69D66" stroke-width="2"/>
+<circle cx="60" cy="65" r="30" fill="#263C45" stroke="#6AAE9F" stroke-opacity=".7"/>
+<circle cx="60" cy="65" r="19" fill="none" stroke="#C69D66" stroke-width="2"/>
+<path d="M60 34 L68 57 L91 65 L68 73 L60 96 L52 73 L29 65 L52 57Z" fill="#C69D66"/>
+<circle cx="60" cy="65" r="6" fill="#ECE3D2"/>
+<path d="M16 114 H104 M16 137 H104" stroke="#C69D66" stroke-opacity=".5"/>
+<rect x="16" y="116" width="88" height="18" rx="2" fill="#31444B"/>
+</svg>
