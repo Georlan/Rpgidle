@@ -21,4 +21,4 @@ jobs:
       - name: Import resources and parse scripts
         run: godot --headless --path . --editor --import --quit
       - name: Run input and UI smoke test
-        run: godot --headless --path . --script res://game/tests/input_smoke.gd
+        run: timeout --signal=TERM --kill-after=5s 90s godot --headless --path . --script res://game/tests/input_smoke.gd
