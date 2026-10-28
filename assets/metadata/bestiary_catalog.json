@@ -37,7 +37,7 @@
           "form_id": "CR002_G1",
           "grade": 1,
           "branch_key": "base",
-          "asset": "res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_64x48.png",
+          "asset": "res://assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_96x80.png",
           "asset_status": "animation_preview"
         }
       ]
@@ -53,7 +53,7 @@
           "form_id": "CR003_G1",
           "grade": 1,
           "branch_key": "base",
-          "asset": "res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_64x48.png",
+          "asset": "res://assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_96x80.png",
           "asset_status": "animation_preview"
         }
       ]

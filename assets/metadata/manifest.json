@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "pack_version": "0.10-creature-motion-studies",
+  "pack_version": "0.12-approved-art-previews",
   "name_status": "provisional",
   "current_asset_state": "concept_only",
   "character_ids": [
@@ -98,6 +98,18 @@
       "type": "image/png",
       "status": "concept_preview",
       "notes": "Four crops from ChatGPT-generated concept sheet of Brumelo G2/G3 and Ferru G2/G3 (28 Oct 2026). Low-resolution 4x48×40 indexed atlas, dark art background included, static non-gameplay portraits only. G4/alternate branches not drawn."
+    },
+    {
+      "path": "assets/01_creatures/CR002_Brumelo/sprite_sheets/CR002_G1_6poses_96x80.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "From OpenAI-generated original approved in chat 2026-10-28. Indexed PNG with alpha, 6 x 96x80, previews not final inbetweens. Previous atlas preserved."
+    },
+    {
+      "path": "assets/01_creatures/CR003_Ferru/sprite_sheets/CR003_G1_6poses_96x80.png",
+      "type": "image/png",
+      "status": "animation_preview",
+      "notes": "From OpenAI-generated original approved in chat 2026-10-28. Indexed PNG with alpha, 6 x 96x80, previews not final inbetweens. Previous atlas preserved."
     }
   ],
   "notes": [
@@ -107,6 +119,7 @@
     "Protótipo HTML v0.2 permite examinar seis telas, mas não simula gameplay nem gameplay real.",
     "A Godot reproduz poses distintas via SpriteFrames; Tween acrescenta suavidade entre key poses. Idle/Walk são ciclos de estudo; ainda faltam inbetweens finais.",
     "Ruins generated source+preview integrated with sha256 verification; modular props are registered but not yet instanced to prevent duplicate portal.",
-    "CR002 and CR003 pose studies were drawn with deterministic pixel primitives specifically for Rpgidle; original SVG placeholders retained for comparison. No third-party characters imported."
+    "CR002 and CR003 pose studies were drawn with deterministic pixel primitives specifically for Rpgidle; original SVG placeholders retained for comparison. No third-party characters imported.",
+    "Original full-resolution generated sheets remain in the conversation; provenance hashes are in docs/CREATURE_ART_V012.md. Runtime exports imported, originals not overwritten."
   ]
 }

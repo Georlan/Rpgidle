@@ -124,6 +124,7 @@ func _run() -> void:
     var first_picture: TextureRect = first_block.get_child(0) as TextureRect
     _check(first_picture.get("creature_id") == "CR001", "first sprite is CR001")
     _check(first_picture.get("has_pose_atlas") == true, "atlas loaded from PNG")
+    _check(first_picture.sprite_cell_size() == Vector2i(64, 48), "Lunaro retains original dimensions")
     for name in ["idle", "walk", "attack", "hurt", "skill"]:
         _check(first_picture.sprite_frame_count(name) >= 3, "sprite state has real frames: " + name)
     # Verify the two new individual atlases also load via SpriteFrames in the actual engine.
@@ -131,6 +132,7 @@ func _run() -> void:
         var creature_block: VBoxContainer = ui._pet_row.get_child(idx) as VBoxContainer
         var creature_picture: TextureRect = creature_block.get_child(0) as TextureRect
         _check(creature_picture.get("has_pose_atlas") == true, "new G1 atlas loaded for %s" % creature_picture.get("creature_id"))
+        _check(creature_picture.sprite_cell_size() == Vector2i(96, 80), "approved art uses 96x80 grid")
         for state in ["idle", "walk", "attack", "hurt", "skill"]:
             _check(creature_picture.sprite_frame_count(state) >= 3, "new creature frames: " + state)
         creature_picture.play_state("walk")
