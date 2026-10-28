@@ -1,6 +1,9 @@
 extends SceneTree
 ## Smoke test in Godot's own runtime. No graphics, controller hardware or Steam needed.
 
+var _failures: int = 0
+
+
 func _initialize() -> void:
     call_deferred("_run")
 
@@ -26,12 +29,28 @@ func _run() -> void:
     _check(ui._stage.backdrop_size() == Vector2i(448, 160), "professional pixel backdrop imported")
     _check(ui._stage.is_preview_running(), "dungeon scene starts in preview mode")
     _check(ui._stage.floor_preview() == 36, "dungeon floor preview stays synchronized")
-    _check(ui._stage.phase_for_time(0.3) == "walk", "exploration phase")
-    _check(ui._stage.phase_for_time(2.65) == "attack", "attack display phase")
-    _check(ui._stage.phase_for_time(5.0) == "idle", "resting phase")
-    ui._stage.trigger_preview_action()
-    _check(ui._stage.preview_phase() == "attack", "manual advance triggers a visual cue")
-    _check(ui._stage.preview_fx_visible(), "action FX is visible briefly")
+    _check(ui._stage.phase_for_time(0.3) == "explore", "exploration phase")
+    _check(ui._stage.phase_for_time(3.6) == "engage", "engage phase")
+    _check(ui._stage.phase_for_time(5.0) == "resolve", "resolve phase")
+    _check(ui._stage.phase_for_time(6.9) == "advance", "advance phase")
+    _check(ui._stage.preview_speed() == 1.0, "idle simulation starts at 1x")
+    ui._toggle_dungeon_speed()
+    _check(ui._stage.preview_speed() == 2.0, "speed button sets 2x")
+    ui._stage._process(1.0)
+    _check(ui._stage.preview_progress() > 0.23, "2x advances the simulated timeline")
+    ui._toggle_dungeon_pause()
+    _check(ui._stage.is_paused(), "pause is recorded")
+    _check(not ui._stage.is_preview_running(), "pause stops visual loop")
+    var paused_progress: float = ui._stage.preview_progress()
+    ui._stage._process(1.0)
+    _check(is_equal_approx(ui._stage.preview_progress(), paused_progress), "paused cycle doesn't advance")
+    ui._toggle_dungeon_pause()
+    _check(ui._stage.is_preview_running(), "auto resumes")
+    ui._stage._process(10.0)
+    _check(ui.preview_floor >= 38, "completing visual cycles advances preview floors")
+    _check(ui._stage.floor_preview() == ui.preview_floor, "floor stays synchronized")
+    ui._toggle_dungeon_speed()
+    _check(ui._stage.preview_speed() == 1.0, "speed toggles back to 1x")
 
     _check(InputMap.has_action("lab_next_screen"), "next screen action")
     _check(InputMap.has_action("lab_previous_screen"), "previous screen action")
@@ -51,12 +70,10 @@ func _run() -> void:
     ui._switch_screen(-1)
     _check(ui.current_screen == 0, "screen returned")
 
-    ui._advance_preview()
-    _check(ui.preview_floor == 37, "preview floor increments")
-    _check(ui._stage.floor_preview() == 37, "stage updates displayed preview floor")
     ui._reset_preview()
     _check(ui.preview_floor == 1, "reset affects only the preview floor")
     _check(ui._stage.floor_preview() == 1, "stage reset changes only floor metadata")
+    _check(ui._stage.preview_progress() < 0.05, "preview cycle reset restores start phase")
     _check(ui.selected_creature == 0, "reset preserves creature")
     _check(ui.preview_grade == 1, "reset preserves creature grade preview")
 
@@ -120,7 +137,7 @@ func _run() -> void:
     ui._toggle_compact()
     _check(not ui._stage.is_preview_running(), "compact mode pauses dungeon animation")
     _check(ui.compact, "compact activated")
-    _check(ui.current_screen == 4, "screen persists in compact mode")
+    _check(ui.current_screen == 0, "screen persists in compact mode")
     _check(ui._compact_dock.visible, "compact mode displays creature dock")
     _check(ui._compact_creatures.get_child_count() == 3, "dock keeps all three creatures")
     _check(ui._compact_expand.visible, "mouse-accessible expand button exists")
@@ -136,13 +153,18 @@ func _run() -> void:
     _check(ui._content.visible, "full panels restored")
 
     ui.queue_free()
-    print("PASS: navigation, controller mapping, dungeon preview, signature and compact mode")
-    quit(0)
+    if _failures > 0:
+        print("FAIL: %d input and idle regression assertions" % _failures)
+        quit(1)
+    else:
+        print("PASS: input, auto dungeon, pause, speed, reset and compact")
+        quit(0)
 
 
 func _check(ok: bool, message: String) -> void:
     if not ok:
-        _fail(message)
+        _failures += 1
+        push_error("FAIL: " + message)
 
 
 func _fail(message: String) -> void:
