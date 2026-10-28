@@ -52,3 +52,13 @@ O componente `CreatureMotion` tem um *autoplay de demonstração*, **sem lógica
 - O teste Godot verifica que o autoplay chega até a caminhada, pode ser interrompido por comando manual, é suspenso ao compactar e retomado ao expandir.
 
 **Pendente:** validação visual em monitor real, quadros intermediários desenhados para passos e cauda, verificação de microtravamentos de animação; os números de duração deste protótipo **não** fixam timings futuros de combate.
+
+## Dungeon Visual Slice v0.6
+
+A tela Dungeon agora contém um `DungeonStage` nativo (`game/scripts/dungeon_stage.gd`) que desenha cenário simples com `CanvasItem._draw` e reutiliza os três `CreatureMotion` existentes.
+
+O ciclo visual de 6 s alterna caminhada, repouso, ataque ilustrativo da CR001 e retorno. O efeito temporário aparece junto ao portal, **sem alvo de combate real, HP, cartas ou dano**. O estágio é destruído apenas ao fechar a cena; ao trocar de tela fica oculto e o processamento pára.
+
+O cenário é intencionalmente feito com primitivas `draw_rect`, `draw_circle`, `draw_arc`, para iterar composição e performance sem arte final. As partes estáticas não são redesenhadas a cada frame, exceto durante a breve janela de FX. <https://docs.godotengine.org/en/4.6/classes/class_canvasitem.html>
+
+Não converter esse protótipo em loop de combate antes de fechar as fórmulas e o design das cartas.

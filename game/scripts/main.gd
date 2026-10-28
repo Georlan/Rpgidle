@@ -41,7 +41,7 @@ var _page_body: Label
 var _action_bar: HFlowContainer
 var _auto_demo_button: Button
 var _pet_row: HBoxContainer
-var _stage: Control
+var _stage
 var _hint: Label
 var _content: VBoxContainer
 var _navigation: HBoxContainer

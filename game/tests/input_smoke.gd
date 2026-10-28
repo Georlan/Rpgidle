@@ -17,6 +17,16 @@ func _run() -> void:
 
     _check(ui.current_screen == 0, "starts in dungeon")
     _check(ui.preview_floor == 36, "starts at demonstration floor 36")
+    _check(ui._stage.visible, "dungeon stage is visible at startup")
+    _check(ui._stage.creature_count() == 3, "dungeon stage includes 3 creatures")
+    _check(ui._stage.is_preview_running(), "dungeon scene starts in preview mode")
+    _check(ui._stage.floor_preview() == 36, "dungeon floor preview stays synchronized")
+    _check(ui._stage.phase_for_time(0.3) == "walk", "exploration phase")
+    _check(ui._stage.phase_for_time(2.65) == "attack", "attack display phase")
+    _check(ui._stage.phase_for_time(5.0) == "idle", "resting phase")
+    ui._stage.trigger_preview_action()
+    _check(ui._stage.preview_phase() == "attack", "manual advance triggers a visual cue")
+    _check(ui._stage.preview_fx_visible(), "action FX is visible briefly")
 
     _check(InputMap.has_action("lab_next_screen"), "next screen action")
     _check(InputMap.has_action("lab_previous_screen"), "previous screen action")
@@ -38,12 +48,16 @@ func _run() -> void:
 
     ui._advance_preview()
     _check(ui.preview_floor == 37, "preview floor increments")
+    _check(ui._stage.floor_preview() == 37, "stage updates displayed preview floor")
     ui._reset_preview()
     _check(ui.preview_floor == 1, "reset affects only the preview floor")
+    _check(ui._stage.floor_preview() == 1, "stage reset changes only floor metadata")
     _check(ui.selected_creature == 0, "reset preserves creature")
     _check(ui.preview_grade == 1, "reset preserves creature grade preview")
 
     ui._open_screen(1)
+    _check(not ui._stage.visible, "dungeon stage hidden on creature tab")
+    _check(not ui._stage.is_preview_running(), "dungeon scene is paused when hidden")
     await process_frame
     _check(ui._pet_row.get_child_count() >= 3, "three visual creature slots")
     var first_block: VBoxContainer = ui._pet_row.get_child(ui._pet_row.get_child_count() - 3) as VBoxContainer
@@ -87,7 +101,10 @@ func _run() -> void:
     ui._next_signature()
     _check(ui.preview_signature == (signature + 1) % 3, "signature preview changes")
 
+    ui._open_screen(0)
+    _check(ui._stage.is_preview_running(), "returning to dungeon resumes scene")
     ui._toggle_compact()
+    _check(not ui._stage.is_preview_running(), "compact mode pauses dungeon animation")
     _check(ui.compact, "compact activated")
     _check(ui.current_screen == 4, "screen persists in compact mode")
     _check(ui._compact_dock.visible, "compact mode displays creature dock")
@@ -95,6 +112,11 @@ func _run() -> void:
     _check(ui._compact_expand.visible, "mouse-accessible expand button exists")
     _check(not ui._content.visible, "full panels hidden in compact mode")
     ui._toggle_compact()
+    _check(ui._stage.is_preview_running(), "expand resumes dungeon preview")
+    ui._toggle_motion_enabled()
+    _check(not ui._stage.is_preview_running(), "reducing motion pauses dungeon")
+    ui._toggle_motion_enabled()
+    _check(ui._stage.is_preview_running(), "motion enabled resumes dungeon")
     _check(not ui.compact, "compact restored")
     _check(not ui._compact_dock.visible, "dock hidden in expanded mode")
     _check(ui._content.visible, "full panels restored")

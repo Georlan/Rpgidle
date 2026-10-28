@@ -34,3 +34,9 @@ Na tela **Criaturas**, selecione **Lunaro / CR001**. A sequência de demonstraç
 O modo compacto mantém os três pets em idle e só executa a demonstração completa na tela expandida da CR001. Brumelo e Ferru têm apenas respiração por Tween, em cadências diferentes; não possuem sprite sheets animadas.
 
 **Status:** prévia visual, não animações finais de gameplay.
+
+## Dungeon visual v0.6
+
+Na tela **1 · Dungeon**, observe três criaturas atravessando uma faixa de ruínas com portal, piso e um pequeno efeito de ataque ilustrativo. Use **Próximo andar (simulação)** para disparar a reação; **Reiniciar andar** altera apenas o número de preview.
+
+A cena para ao mudar de tela, ao usar F1 no compacto ou ao reduzir movimento. Isso **não é combate jogável**, apenas composição visual/ritmo.

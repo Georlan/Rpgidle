@@ -13,6 +13,10 @@
 
 ## Em andamento
 
+- [x] Palco visual de Dungeon v0.6: ruínas, piso, portal, equipe 3×, caminhada, ataque e FX de demonstração.
+- [x] Pausa automática da cena ao trocar de tela, compactar ou desativar movimento.
+- [ ] Aprovar composição, escala e ritmo no Linux/Windows com capturas reais.
+
 - [x] Autoplay demonstrativo CR001 com sequência de idle, caminhada, ataque e habilidade.
 - [x] Comandos manuais suspendem o autoplay; compacto e movimento reduzido pausam a sequência.
 - [x] CR002 e CR003 possuem respiração sutil em ritmos diferentes.

@@ -9,7 +9,7 @@ const CREATURES = [
 ]
 const CYCLE_SECONDS := 6.0
 
-var _actors: Array[TextureRect] = []
+var _actors: Array = []
 var _playing: bool = false
 var _elapsed: float = 0.0
 var _phase: String = "idle"
@@ -136,7 +136,7 @@ func _position_actors() -> void:
         elif _elapsed < 4.45:
             travel = 34.0 * (1.0 - (_elapsed - 2.95) / 1.5)
     for i in _actors.size():
-        var actor := _actors[i]
+        var actor = _actors[i]
         var x: float = width * 0.09 + float(i) * minf(width * 0.165, 118.0) + travel
         actor.position = Vector2(roundf(x), roundf(baseline - actor.size.y))
 
