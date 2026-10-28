@@ -84,6 +84,12 @@ func _unhandled_input(event: InputEvent) -> void:
     elif current_screen == 0 and event.is_action_pressed("lab_reset_preview"):
         _reset_preview()
         get_viewport().set_input_as_handled()
+    elif current_screen == 0 and event is InputEventKey and event.keycode == KEY_P:
+        _toggle_dungeon_pause()
+        get_viewport().set_input_as_handled()
+    elif current_screen == 0 and event is InputEventKey and event.keycode == KEY_V:
+        _toggle_dungeon_speed()
+        get_viewport().set_input_as_handled()
     elif event is InputEventKey:
         if event.keycode >= KEY_1 and event.keycode <= KEY_6:
             _open_screen(event.keycode - KEY_1)
@@ -184,6 +190,8 @@ func _build_interface() -> void:
     _content.add_child(_signature_preview)
 
     _stage = DungeonStage.new()
+    _stage.visual_cycle_completed.connect(_on_stage_cycle_completed)
+    _stage.visual_phase_changed.connect(_on_stage_phase_changed)
     _stage.custom_minimum_size = Vector2(0, 270)
     _stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     _stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -204,7 +212,7 @@ func _build_interface() -> void:
 
     _hint = Label.new()
     _hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    _hint.text = "1–6 telas    ·    Q/E navegar    ·    Enter confirmar    ·    F1 desktop    ·    R reiniciar prévia    /    Controle: LB/RB, A, B, Start"
+    _hint.text = "1–6 telas    ·    Q/E navegar    ·    P pausa    ·    V velocidade    ·    R reiniciar    ·    F1 desktop    /    Controle: LB/RB, A, B, Start"
     _hint.add_theme_font_size_override("font_size", 11)
     _hint.add_theme_color_override("font_color", Color("#6aae9f"))
     layout.add_child(_hint)
@@ -234,8 +242,8 @@ func _render() -> void:
     _page_title.text = SCREENS[current_screen]
     match current_screen:
         0:
-            _page_body.text = "RUÍNAS DO PRIMEIRO ECO      •      ANDAR %d      •      3 CRIATURAS EM EXPEDIÇÃO  /  PRÉVIA" % preview_floor
-            _add_action("Avançar na prévia", _advance_preview)
+            _add_action("Retomar auto" if _stage.is_paused() else "Pausar auto", _toggle_dungeon_pause)
+            _add_action("Velocidade: %dx" % int(_stage.preview_speed()), _toggle_dungeon_speed)
             _add_action("Reiniciar prévia", _reset_preview)
         1:
             var pet: Dictionary = PETS[selected_creature]
@@ -267,6 +275,8 @@ func _render() -> void:
         5:
             _page_body.text = "ARENA 3 × 3   /   Em desenvolvimento\nComposições e cartas terão limites competitivos. Sem partidas conectadas nesta versão."
             _render_pets()
+    if current_screen == 0:
+        _update_dungeon_hud()
     _hint.visible = not compact
 
 
@@ -360,14 +370,44 @@ func _switch_screen(delta: int) -> void:
     _open_screen(current_screen + delta)
 
 
-func _advance_preview() -> void:
+func _update_dungeon_hud() -> void:
+    var phase_label: String = _stage.preview_phase_label()
+    if not motion_enabled:
+        phase_label = "Movimento reduzido"
+    _compact_status.text = "Andar %d   ·   %s\nPrévia automática" % [preview_floor, phase_label]
+    if current_screen == 0:
+        _page_body.text = "RUÍNAS DO PRIMEIRO ECO  ·  ANDAR %d  ·  %s  ·  %dx  /  SIMULAÇÃO VISUAL" % [
+            preview_floor, phase_label, int(_stage.preview_speed())
+        ]
+
+
+func _on_stage_phase_changed(_phase: String) -> void:
+    if _page_body != null and _compact_status != null:
+        _update_dungeon_hud()
+
+
+func _on_stage_cycle_completed() -> void:
+    # Preview-only floor: the creature roster and forms remain untouched.
     preview_floor += 1
+    _stage.set_floor_preview(preview_floor)
+    _update_dungeon_hud()
+
+
+func _toggle_dungeon_pause() -> void:
+    _stage.set_paused(not _stage.is_paused())
     _render()
-    _stage.trigger_preview_action()
+
+
+func _toggle_dungeon_speed() -> void:
+    var value: float = 2.0 if _stage.preview_speed() == 1.0 else 1.0
+    _stage.set_preview_speed(value)
+    _render()
 
 
 func _reset_preview() -> void:
     preview_floor = 1
+    _stage.set_floor_preview(1)
+    _stage.reset_preview_cycle()
     _render()
 
 
@@ -416,6 +456,7 @@ func _toggle_motion_enabled() -> void:
         if picture is CreatureMotion:
             picture.set_motion_enabled(motion_enabled)
     _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
+    _update_dungeon_hud()
     if motion_enabled and auto_demo_enabled and not compact:
         _resume_preview_demo()
 
@@ -460,6 +501,7 @@ func _toggle_compact() -> void:
                     picture.stop_demo()
     compact = not compact
     _stage.set_playing(current_screen == 0 and not compact and motion_enabled)
+    _update_dungeon_hud()
     # Interface realmente expandida/compacta: mantém os controles para restauração.
     _navigation.visible = not compact
     _content.visible = not compact

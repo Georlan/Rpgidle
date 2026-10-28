@@ -13,6 +13,12 @@
 
 ## Em andamento
 
+- [x] Loop visual idle-first com fases: explorar → ação automática → concluir → avançar.
+- [x] Andar demonstrativo avança sozinho ao completar o ciclo, sem mexer em criaturas.
+- [x] Pausa/retomada, velocidade 1x/2x e reset apenas da prévia.
+- [x] Sombras de contato achatadas, vinculadas à posição real de cada pet.
+- [ ] Conferir sombras e composição na Godot Linux em 1100×660 e modo compacto.
+
 - [x] Duas artes originais geradas em 28/10/2026 e dois exports otimizados versionados com hashes e proveniência.
 - [x] Cenário de referência conectado à Dungeon com aspect-cover e sem distorção.
 - [x] Contrato da folha de objetos, pivôs e futura separação em camadas documentados.
